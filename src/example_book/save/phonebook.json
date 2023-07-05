@@ -1,0 +1,67 @@
+{
+    "data": {
+        "Dmytro": {
+            "user_name": "Dmytro",
+            "user_phones": [
+                "380933899329"
+            ],
+            "user_birthday": null
+        },
+        "Lisa": {
+            "user_name": "Lisa",
+            "user_phones": [
+                "+38066 9932141"
+            ],
+            "user_birthday": null
+        },
+        "Olesya": {
+            "user_name": "Olesya",
+            "user_phones": [
+                "+380997198632"
+            ],
+            "user_birthday": null
+        },
+        "Ullia": {
+            "user_name": "Ullia",
+            "user_phones": [
+                "+380997360539"
+            ],
+            "user_birthday": null
+        },
+        "Biba": {
+            "user_name": "Biba",
+            "user_phones": [
+                "+380683196798"
+            ],
+            "user_birthday": null
+        },
+        "Dmytro Belousov": {
+            "user_name": "Dmytro Belousov",
+            "user_phones": [
+                "+380990778722"
+            ],
+            "user_birthday": null
+        },
+        "Dolchik": {
+            "user_name": "Dolchik",
+            "user_phones": [
+                "+38066 999 66 12"
+            ],
+            "user_birthday": null
+        },
+        "Yelyzaveta": {
+            "user_name": "Yelyzaveta",
+            "user_phones": [
+                "+380660249798"
+            ],
+            "user_birthday": null
+        },
+        "Kulinich": {
+            "user_name": "Kulinich",
+            "user_phones": [
+                "+380660249798"
+            ],
+            "user_birthday": null
+        }
+    }
+}
