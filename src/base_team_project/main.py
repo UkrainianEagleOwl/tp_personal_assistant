@@ -7,7 +7,7 @@ from memory import AddressBook,SetterValueIncorrect
 def main():
     work_book = load_address_book()
     if not work_book:
-        # print("(debug) Book not loaded.")
+        print("(debug) Book not loaded.")
         work_book = AddressBook()
     print("Welcome to the Assistant bot! ")
     print(greetings())
