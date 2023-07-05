@@ -1,5 +1,7 @@
 
-
+#
+# ЦЕЙ ТЕСТ НЕ ПРАЦЮЄ ПОТРЕБУЄ ДОРОБКИ
+#
 import unittest
 import sys
 from memory import AddressBook,Record
