@@ -17,11 +17,10 @@ extensions = {
     'apk': ['apk'],
     'bat': ['bat']
 }
-
 #The user is prompted to enter the path to the folder that needs to be sorted
 #Від користувача потребується ввести шлях до папки, яку потрібно відсортувати
-main_path = input("Enter the path to the folder that needs to be sorted: ")
-main_path = Path(main_path)
+# main_path = input("Enter the path to the folder that needs to be sorted: ")
+# main_path = Path(main_path)
 
 #The folders_create function creates the necessary folders based on the folder_names and checks if any files with matching extensions exist in the parent folder before creating the folder.
 #Функція folders_create створює необхідні папки на основі folder_names та перевіряє, чи існують файли з відповідними розширеннями у батьківскій папці, перш ніж створювати папку.
@@ -33,8 +32,6 @@ def folders_create(folder_path, folder_names):
             exts = folder_names[folder]
             if any(file_path.suffix[1:] in exts for file_path in file_paths):
                 folder_path.mkdir()
-
-
 
 def get_subfolder_paths(folder_path):
     subfolder_paths = [f for f in folder_path.iterdir() if f.is_dir()]
@@ -74,8 +71,13 @@ def remove_empty_folders(folder_path):
             print(f'Removing empty folder: {subfolder_path.name}')
             os.rmdir(subfolder_path)
 
-
-if __name__ == "__main__":
+def sort_files_in_this_path(input_path):
+    main_path = Path(input_path)
     folders_create(main_path, extensions)
     sort_files(main_path)
     remove_empty_folders(main_path)
+
+# if __name__ == "__main__":
+#     folders_create(main_path, extensions)
+#     sort_files(main_path)
+#     remove_empty_folders(main_path)

@@ -18,8 +18,3 @@ YELLOW = "\033[93m"
 BLUE = "\033[94m"
 RESET = "\033[0m"
 
-def get_command_input(Input_message=''):
-    Input_value = None
-    while Input_value is None:
-        Input_value = input(f'{Input_message} ')
-    return Input_value
