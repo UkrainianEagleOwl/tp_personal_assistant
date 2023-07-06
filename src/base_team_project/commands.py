@@ -1,12 +1,7 @@
 
 
-import collections
 import difflib
-from save_load_book import load_address_book, save_address_book
-from memory import AddressBook, Record
-
-address_book = AddressBook()
-Person = collections.namedtuple('Person',['name','phone'])
+from memory import Record
 
 def get_command_input(Input_message=''):
     Input_value = None
@@ -31,9 +26,9 @@ def find_closest_command(user_input):
 
 
 def input_error(func):
-    def wrapper(adress_book, name, phone = None):
+    def wrapper(*arg):
         try:
-            result = func(adress_book,name, phone)
+            result = func(*arg)
             return result
         except KeyError:
             print("The contact is missing. ")
@@ -60,8 +55,6 @@ def change_exist_contact(*arg):#first always address book
     else:
         return "Can't find such contact. Try again."
 
-    
-
 @input_error
 def show_phone(*arg):#first always address book second name
     if arg[1] in arg[0].data:
@@ -72,11 +65,16 @@ def show_phone(*arg):#first always address book second name
 def show_all(*arg):
     return [str(contact) for contact in arg[0].values()]
 
+@input_error
+def find_user(*arg):
+    result = arg[0].find_users(arg[1])
+    return result if result else "No matches found among contacts."
+     
 def ending(*arg):
     return 'Goodbye!'
 
 input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',
-                  'get number contact','get phone','show phone','show all contacts','show book','show all','goodbye','close','end']
+                  'get number contact','get phone','show phone','show all contacts','show book','show all','goodbye','close','end','search','find','find user']
 
 # Define available commands
 commands = [
@@ -111,6 +109,12 @@ commands = [
         "func":show_all
     },
     {
+        "name": "find_user",
+        "inpute view":  ['search','find','find user'],
+        "arguments": ['text_for_search'],
+        "func":find_user
+    },
+    {
         "name": "ending",
         "inpute view": ['goodbye','close','end'],
         "arguments": [],
@@ -118,5 +122,5 @@ commands = [
     }
     ]
 
-def get_command(name):
-    return list(filter(lambda cmd: cmd["name"] == name, commands))[0]
+# def get_command(name):
+#     return list(filter(lambda cmd: cmd["name"] == name, commands))[0]
