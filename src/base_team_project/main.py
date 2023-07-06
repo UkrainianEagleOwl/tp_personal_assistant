@@ -27,7 +27,7 @@ def main():
                     result = cmd_func(work_book)
                 if isinstance(result,list):
                     for i in result:
-                        print
+                        print(i)
                 else:
                     print(result) if result else None
 

@@ -30,9 +30,9 @@ def find_closest_command(user_input):
 
 
 def input_error(func):
-    def wrapper(adress_book, name, phone = None):
+    def wrapper(*arg):
         try:
-            result = func(adress_book,name, phone)
+            result = func(*arg)
             return result
         except KeyError:
             print("The contact is missing. ")
@@ -71,7 +71,8 @@ def show_all(*arg):
 
 @input_error
 def find_user(*arg):
-    return arg[0].find_users(arg[1])
+    result = arg[0].find_users(arg[1])
+    return result if result else "No matches found among contacts."
      
 def ending(*arg):
     return 'Goodbye!'
@@ -117,10 +118,6 @@ commands = [
         "arguments": ['text_for_search'],
         "func":find_user
     },
-    # {
-    #     "name" : "delete_contact",
-    #     "inpute view":
-    # }
     {
         "name": "ending",
         "inpute view": ['goodbye','close','end'],

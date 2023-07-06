@@ -199,7 +199,7 @@ class Record():
 
     def __str__(self):
         phone_numbers = ' | '.join(str(phone) for phone in self.user_phones)
-        return '|{:^10}|\n|{:^20}| {:^10}\n'.format(str(self.user_name), phone_numbers, str(self.user_birthday) if self.user_birthday else '')
+        return '|{:^10}|\n|{:^20}| {:^10}|\n'.format(str(self.user_name), phone_numbers, str(self.user_birthday.date()) if self.user_birthday else '')
 
     
     def to_dict(self):
