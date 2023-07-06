@@ -3,7 +3,6 @@
 import re
 import json
 import csv
-import os
 from datetime import datetime
 from collections import UserDict
 
@@ -43,6 +42,7 @@ class AddressBook(UserDict):
         return matching_users
     
     def to_dict(self):
+        #create dictionary based on class book
         return {
             'data': {
                 name: record.to_dict() for name, record in self.data.items()
@@ -50,6 +50,7 @@ class AddressBook(UserDict):
         }
     
     def from_dict(cls, data):
+        #get address book object from dictionary represantation
         address_book = cls()
         records = [Record.from_dict(record_data) for record_data in data['data'].values()]
         for record in records:
@@ -57,11 +58,13 @@ class AddressBook(UserDict):
         return address_book
     
     def save_to_json(self, filename):
+        #method for saving book in json format
         with open(filename, 'w') as file:
             json.dump(self.to_dict(), file, indent=4)
 
     @classmethod
     def load_from_json(cls, filename):
+        #method for loading book from json format
         with open(filename, 'r') as file:
             data = json.load(file)
         address_book = cls()
@@ -72,6 +75,7 @@ class AddressBook(UserDict):
         return address_book
     
     def save_to_csv(self, filename):
+        #method for saving book in csv format
         with open(filename, "w", newline="") as file:
             writer = csv.writer(file)
             for record in self.data.values():
@@ -80,6 +84,7 @@ class AddressBook(UserDict):
 
     @classmethod
     def load_from_csv(cls, filename):
+        #method for loading book from csv format
         address_book = cls()
         with open(filename, "r", newline="") as file:
             reader = csv.reader(file)
@@ -203,6 +208,7 @@ class Record():
 
     
     def to_dict(self):
+        #create dictionary based on class record
         return {
             'user_name': self.user_name.value,
             'user_phones': [phone.value for phone in self.user_phones],
@@ -211,6 +217,7 @@ class Record():
 
     @classmethod
     def from_dict(cls, data):
+        #method get record from dictionary form
         name = Name(data.get('user_name'))
         phones_data = data.get('user_phones', [])
         phones = [Phone(phone_number) for phone_number in phones_data]

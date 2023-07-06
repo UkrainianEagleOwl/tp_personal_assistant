@@ -1,11 +1,7 @@
 
 
-import collections
 import difflib
-from memory import AddressBook, Record
-
-address_book = AddressBook()
-Person = collections.namedtuple('Person',['name','phone'])
+from memory import Record
 
 def get_command_input(Input_message=''):
     Input_value = None
@@ -126,5 +122,5 @@ commands = [
     }
     ]
 
-def get_command(name):
-    return list(filter(lambda cmd: cmd["name"] == name, commands))[0]
+# def get_command(name):
+#     return list(filter(lambda cmd: cmd["name"] == name, commands))[0]
