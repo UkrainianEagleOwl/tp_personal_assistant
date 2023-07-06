@@ -1,7 +1,6 @@
 
 
-from commands import greetings,find_closest_command
-from common_functions import get_command_input
+from commands import greetings,find_closest_command,get_command_input
 from save_load_book import save_address_book,load_address_book
 from memory import AddressBook,SetterValueIncorrect
 

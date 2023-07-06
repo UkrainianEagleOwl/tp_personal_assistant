@@ -1,8 +1,17 @@
 
 
 import difflib
+from sorter import sort_files_in_this_path
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
 from common_functions import STR_EPIC_COMMANDS, YELLOW,RESET,BLUE,GREEN
 from memory import Record
+
+def get_command_input(Input_message=''):
+    Input_value = None
+    while Input_value is None:
+        Input_value = prompt(Input_message, completer=completer)
+    return Input_value
 
 #Функція find_closest_command(user_input) знаходить найближчу команду до введеної користувачем, за допомогою алгоритму Левенштейну.
 def find_closest_command(user_input):
@@ -77,13 +86,17 @@ def help_commands(*arg):
             s += s3
         l_cmd.append(s)
     return l_cmd
-        
-     
+
+def sort_files(*arg):#first ALWAYS address book. next every you need, just ignore the first
+    sort_files_in_this_path(arg[1])
+          
 def ending(*arg):
     return 'Goodbye!'
 
-input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',
+input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
                   'get number contact','get phone','show phone','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands","need help"]
+# Ініціалізація автодоповнювача зі списком команд
+completer = WordCompleter(input_variants)
 
 # Define available commands
 commands = [
@@ -130,12 +143,15 @@ commands = [
         "func":help_commands
     },
     {
+        "name": "sort",
+        "input view": ["sort","sort files","need sort"],
+        "arguments": ['path to the folder'],
+        "func":sort_files
+    },
+    {
         "name": "ending",
         "input view": ['goodbye','close','end'],
         "arguments": [],
         "func":ending
     }
     ]
-
-# def get_command(name):
-#     return list(filter(lambda cmd: cmd["name"] == name, commands))[0]
