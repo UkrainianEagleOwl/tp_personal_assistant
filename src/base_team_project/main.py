@@ -1,6 +1,7 @@
 
 
-from commands import greetings,get_command_input,find_closest_command
+from commands import greetings,find_closest_command
+from common_functions import get_command_input
 from save_load_book import save_address_book,load_address_book
 from memory import AddressBook,SetterValueIncorrect
 
@@ -29,7 +30,7 @@ def main():
                 else:
                     result = cmd_func(work_book)
                 if isinstance(result,list):
-                    # Print each item in the result list
+                    # Print each item in the result listc
                     for i in result:
                         print(i)
                 else:
