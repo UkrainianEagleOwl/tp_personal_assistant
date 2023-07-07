@@ -1,83 +1,92 @@
-from pathlib import Path
 import os
+import shutil
+from pathlib import Path
 
-#The extensions dictionary maps folder names to lists of corresponding file extensions.
-#Словник extensions містить відповідності назв папок до списків відповідних розширень файлів.
-extensions = {
-    'video': ['mp4', 'mov', 'avi', 'mkv', 'wmv', '3gp', '3g2', 'mpg', 'mpeg', 'm4v', 'h264', 'flv', 'rm', 'swf', 'vob'],
-    'audio': ['mp3', 'wav', 'ogg', 'flac', 'aif', 'mid', 'midi', 'mpa', 'wma', 'wpl', 'cda'],
-    'image': ['png', 'jpg', 'bpm', 'ai', 'psd', 'ico', 'jpeg', 'ps', 'svg', 'tif', 'tiff'],
-    'data': ['sql', 'sqlite', 'sqlite3', 'csv', 'dat', 'db', 'log', 'mdb', 'sav', 'tar', 'xml'],
-    'archive': ['zip', 'rar', '7z', 'z', 'gz', 'rpm', 'arj', 'pkg', 'deb'],
-    'text': ['pdf', 'txt', 'doc', 'docx', 'rtf', 'tex', 'wpd', 'odt'],
-    'presentation': ['pptx', 'ppt', 'pps', 'key', 'odp'],
-    'font': ['otf', 'ttf', 'fon', 'fnt'],
-    'gif': ['gif'],
-    'exe': ['exe'],
-    'apk': ['apk'],
-    'bat': ['bat']
-}
-#The user is prompted to enter the path to the folder that needs to be sorted
-#Від користувача потребується ввести шлях до папки, яку потрібно відсортувати
-# main_path = input("Enter the path to the folder that needs to be sorted: ")
-# main_path = Path(main_path)
 
-#The folders_create function creates the necessary folders based on the folder_names and checks if any files with matching extensions exist in the parent folder before creating the folder.
-#Функція folders_create створює необхідні папки на основі folder_names та перевіряє, чи існують файли з відповідними розширеннями у батьківскій папці, перш ніж створювати папку.
-def folders_create(folder_path, folder_names):
-    for folder in folder_names:
-        folder_path = folder_path / folder
-        if not folder_path.exists():
-            file_paths = get_file_paths(folder_path)
-            exts = folder_names[folder]
-            if any(file_path.suffix[1:] in exts for file_path in file_paths):
-                folder_path.mkdir()
+# Перевірка на розширення.
+def category(extension):
+    if extension in ['JPEG', 'PNG', 'JPG', 'SVG']:
+        return 'images'
+    elif extension in ['AVI', 'MP4', 'MOV', 'MKV']:
+        return 'video'
+    elif extension in ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX']:
+        return 'documents'
+    elif extension in ['MP3', 'OGG', 'WAV', 'AMR']:
+        return 'audio'
+    elif extension in ['ZIP', 'GZ', 'TAR']:
+        return 'archives'
+    else:
+        return 'Unknown extensions'
 
-def get_subfolder_paths(folder_path):
-    subfolder_paths = [f for f in folder_path.iterdir() if f.is_dir()]
-    return subfolder_paths
 
-#The get_file_paths function retrieves the paths of all files in the specified folder.
-#Функція get_file_paths отримує шляхи до всіх файлів у вказаній папці.
-def get_file_paths(folder_path):
-    file_paths = folder_path.glob('*')
-    return [f for f in file_paths if f.is_file()]
+# Транслітерація кириличного алфавіту на латинський.
+def normalize(name):
+    CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
+    TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
+                   "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
 
-#The sort_files function iterates over the file paths and moves them to the corresponding folders based on their extensions.
-#Функція sort_files перебирає шляхи файлів і переміщує їх до відповідних папок на основі їх розширень.
-def sort_files(folder_path):
-    file_paths = get_file_paths(folder_path)
-    ext_list = list(extensions.items())
+    TRANS = {}
+    for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
+        TRANS[ord(c)] = l
+        TRANS[ord(c.upper())] = l.upper()
 
-    for file_path in file_paths:
-        extension = file_path.suffix[1:]
-        file_name = file_path.name
+    return name.translate(TRANS, '_').replace('_', '').replace(' ', '_')
 
-        for folder_name, exts in ext_list:
-            if extension in exts:
-                print(f'Moving {file_name} to {folder_name} folder')
-                destination_folder = folder_path / folder_name
-                destination_folder.mkdir(exist_ok=True)
-                destination_file = destination_folder / file_name
-                file_path.rename(destination_file)
 
-#The remove_empty_folders function removes any empty subfolders.
-#Функція remove_empty_folders видаляє порожні підпапки.
-def remove_empty_folders(folder_path):
-    subfolder_paths = get_subfolder_paths(folder_path)
+# Розпаковує архіви та переносить їх вміст до папки "archives".
+def unpack_archives(path):
+    for item in os.listdir(path):
+        item_path = os.path.join(path, item)
+        if os.path.isfile(item_path) and item.endswith('.zip'):
+            archive_folder = os.path.join(path, 'archives')
+            if not os.path.exists(archive_folder):
+                os.mkdir(archive_folder)
+            shutil.unpack_archive(item_path, archive_folder)
+            os.remove(item_path)
 
-    for subfolder_path in subfolder_paths:
-        if not any(subfolder_path.iterdir()):
-            print(f'Removing empty folder: {subfolder_path.name}')
-            os.rmdir(subfolder_path)
 
-def sort_files_in_this_path(input_path):
-    main_path = Path(input_path)
-    folders_create(main_path, extensions)
-    sort_files(main_path)
-    remove_empty_folders(main_path)
+# Сортує файли в папці.
+def sort_files(path):
+    for item in os.listdir(path):
+        item_path = os.path.join(path, item)
+        
+        # Якщо це файл
+        if os.path.isfile(item_path):
+            # Отримуємо розширення файлу
+            extension = item.split('.')[-1].upper()
+            
+            # Якщо розширення відоме, переміщуємо файл
+            if extension in ['JPEG', 'PNG', 'JPG', 'SVG', 'AVI', 'MP4', 'MOV', 'MKV', 'DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX', 'MP3', 'OGG', 'WAV', 'AMR']:
+                category_folder = category(extension)
+                category_path = os.path.join(path, category_folder)
+                
+                if not os.path.exists(category_path):
+                    os.mkdir(category_path)
+                
+                src_path = os.path.join(path, item)
+                dst_path = os.path.join(category_path, item)
+                shutil.move(src_path, dst_path)
+            
+            # Якщо розширення невідоме, не робимо нічого
+            else:
+                pass
+        
+        # Якщо це папка
+        elif os.path.isdir(item_path):
+            if item not in ['archives', 'video', 'audio', 'documents', 'images']:
+                sort_files(item_path)
+                # Удаляем пустую папку после рекурсивного вызова
+                if not os.listdir(item_path):
+                    os.rmdir(item_path)
+            else:
+                shutil.rmtree(item_path)
 
-# if __name__ == "__main__":
-#     folders_create(main_path, extensions)
-#     sort_files(main_path)
-#     remove_empty_folders(main_path)
+
+def main():
+    path = Path(input("Введіть шлях до папки: "))
+    unpack_archives(path)
+    sort_files(path)
+
+
+if __name__ == "__main__":
+    main()
