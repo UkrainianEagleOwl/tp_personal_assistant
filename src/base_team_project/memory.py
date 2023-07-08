@@ -1,10 +1,9 @@
-
-
 import re
 import json
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import UserDict
+from prettytable import PrettyTable
 
 
 class SetterValueIncorrect(Exception):
@@ -15,6 +14,48 @@ class SetterValueIncorrect(Exception):
 
 class AddressBook(UserDict):
     # Class representing an address book, which is a subclass of UserDict
+
+    def get_birthdays_per_week(self):
+
+        days_week = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday',
+                     3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
+
+        # Визначення інтервалу, в якому потрібно вітати
+        current_time = datetime.now()
+        one_week_interval = timedelta(weeks=1)
+        max_date = current_time + one_week_interval
+
+        # Приведення дати народження до поточного року
+        for user_data in self.data.values():
+            user_birthday = datetime.strptime(
+                user_data['user_birthday'], "%d.%m.%Y")
+            user_birthday = user_birthday.replace(year=current_time.year)
+            user_data['user_birthday'] = user_birthday
+
+        # Створення списку користувачів, яких потрібно привітати
+        birthday_users = []
+        for user_data in self.data.values():
+            user_birthday = user_data['user_birthday']
+            if current_time < user_birthday <= max_date:
+                if user_birthday.weekday() > 4:
+                    greeting_day = days_week[0]
+                else:
+                    greeting_day = days_week[user_birthday.weekday()]
+                user_info = {
+                    'user_name': user_data['user_name'],
+                    'user_phones': ', '.join(user_data['user_phones']),
+                    'user_birthday': user_data['user_birthday'].strftime("%d.%m.%Y"),
+                    'day': '🎂' + ' ' + greeting_day
+                }
+                birthday_users.append(user_info)
+
+        # Вивід списку користувачів за допомогою prettytable
+        table = PrettyTable()
+        table.field_names = ['Greeting Day', 'Name', 'Phone', 'Date of Birth']
+        for user_info in birthday_users:
+            table.add_row([user_info['day'], user_info['user_name'],
+                           user_info['user_phones'], user_info['user_birthday']])
+        print(table)
 
     def add_record(self, aRecord):
         # Method to add a record to the address book
@@ -29,7 +70,7 @@ class AddressBook(UserDict):
         return None
 
     def find_users(self, search_string):
-            # Find users whose name or phone number matches the search string
+        # Find users whose name or phone number matches the search string
         matching_users = []
         for record in self.data.values():
             if record.user_name.value.find(search_string) != -1:
@@ -40,31 +81,32 @@ class AddressBook(UserDict):
                         matching_users.append(record)
                         break
         return matching_users
-    
+
     def to_dict(self):
-        #create dictionary based on class book
+        # create dictionary based on class book
         return {
             'data': {
                 name: record.to_dict() for name, record in self.data.items()
             }
         }
-    
+
     def from_dict(cls, data):
-        #get address book object from dictionary represantation
+        # get address book object from dictionary represantation
         address_book = cls()
-        records = [Record.from_dict(record_data) for record_data in data['data'].values()]
+        records = [Record.from_dict(record_data)
+                   for record_data in data['data'].values()]
         for record in records:
             address_book.add_record(record)
         return address_book
-    
+
     def save_to_json(self, filename):
-        #method for saving book in json format
+        # method for saving book in json format
         with open(filename, 'w') as file:
             json.dump(self.to_dict(), file, indent=4)
 
     @classmethod
     def load_from_json(cls, filename):
-        #method for loading book from json format
+        # method for loading book from json format
         with open(filename, 'r') as file:
             data = json.load(file)
         address_book = cls()
@@ -73,9 +115,9 @@ class AddressBook(UserDict):
         for record in records:
             address_book.add_record(record)
         return address_book
-    
+
     def save_to_csv(self, filename):
-        #method for saving book in csv format
+        # method for saving book in csv format
         with open(filename, "w", newline="") as file:
             writer = csv.writer(file)
             for record in self.data.values():
@@ -84,7 +126,7 @@ class AddressBook(UserDict):
 
     @classmethod
     def load_from_csv(cls, filename):
-        #method for loading book from csv format
+        # method for loading book from csv format
         address_book = cls()
         with open(filename, "r", newline="") as file:
             reader = csv.reader(file)
@@ -105,7 +147,7 @@ class Field():
             return self.value == other.value
         return False
 
-    def __init__(self, value = ''):
+    def __init__(self, value=''):
         # Constructor to initialize the field with a value
         self._value = value
 
@@ -120,11 +162,11 @@ class Name(Field):
     @value.setter
     def value(self, new_value):
         # Setter method for the value property
-        if isinstance(new_value,str):
+        if isinstance(new_value, str):
             self._value = new_value
         else:
             raise SetterValueIncorrect('Only string accepted')
-        
+
     def __str__(self) -> str:
         return f'Name: {self.value}'
 
@@ -146,15 +188,17 @@ class Phone(Field):
             except TypeError:
                 raise SetterValueIncorrect(
                     'Only correct type of phone numbers accepted')
-            
+
         # if re.search(r"[+]380[(]\d{2}[)]\d{3}[-]\d{1,2}[-]\d{2,3}(?=.{1,17})", new_value):
         if new_value.isdigit():
             self._value = new_value
         else:
-            raise SetterValueIncorrect('Only correct type of phone numbers accepted')
-        
+            raise SetterValueIncorrect(
+                'Only correct type of phone numbers accepted')
+
     def __str__(self):
         return f'Phone: {self.value}'
+
 
 class Birthday(Field):
     # Class representing a birthday field, which is a subclass of Field
@@ -176,7 +220,7 @@ class Birthday(Field):
                 raise SetterValueIncorrect('Incorrect string type of data')
         else:
             raise SetterValueIncorrect('Only string data or datetime accepted')
-    
+
     def __str__(self) -> str:
         return f'Birthday: {self.value.strftime()}'
 
@@ -200,34 +244,32 @@ class Record():
         if isinstance(other, Record):
             return self.user_name.value == other.user_name.value
         return False
-    
 
     def __str__(self):
         phone_numbers = ' | '.join(str(phone) for phone in self.user_phones)
         return '|{:^10}|\n|{:^20}| {:^10}|\n'.format(str(self.user_name), phone_numbers, str(self.user_birthday.date()) if self.user_birthday else '')
 
-    
     def to_dict(self):
-        #create dictionary based on class record
+        # create dictionary based on class record
         return {
             'user_name': self.user_name.value,
             'user_phones': [phone.value for phone in self.user_phones],
             'user_birthday': self.user_birthday.isoformat() if self.user_birthday else None
-            }
+        }
 
     @classmethod
     def from_dict(cls, data):
-        #method get record from dictionary form
+        # method get record from dictionary form
         name = Name(data.get('user_name'))
         phones_data = data.get('user_phones', [])
         phones = [Phone(phone_number) for phone_number in phones_data]
         birthday = datetime.fromisoformat(
             data['user_birthday']) if data['user_birthday'] else None
-        record = Record(name, birthday =  birthday)
+        record = Record(name, birthday=birthday)
         for phone in phones:
             record.add_phone(phone)
         return record
-    
+
     def add_phone(self, aPhone):
         # Method to add a phone to the record
         if isinstance(aPhone, str):
@@ -262,4 +304,3 @@ class Record():
         this_year_birthday = datetime(
             year=current_datetime.year, month=self.user_birthday.month, day=self.user_birthday.day)
         return (this_year_birthday - current_datetime).days
-
