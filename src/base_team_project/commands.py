@@ -93,6 +93,22 @@ def sort_files(*arg):#first ALWAYS address book. next every you need, just ignor
 def ending(*arg):
     return 'Goodbye!'
 
+def add_notes(*arg):
+    title = get_command_input("Enter note title:")
+    description = get_command_input("Enter note description:")
+    tags = get_command_input("Enter note tags (comma-separated):").split(",")
+    tags = [Teg(tag.strip()) for tag in tags]
+    note = Notes(title, tags, description)
+    arg[0].add_note(note)
+    return 'Note added.'
+
+def remove_notes(*arg):
+    title = get_command_input("Enter note title to remove:")
+    if arg[0].remove_note(title):
+        return 'Note removed.'
+    else:
+        return 'Note not found.'
+
 input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
                   'get number contact','get phone','show phone','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands","need help"]
 # Ініціалізація автодоповнювача зі списком команд
@@ -153,5 +169,17 @@ commands = [
         "input view": ['goodbye','close','end'],
         "arguments": [],
         "func":ending
+    },
+    {
+        "name": "add_notes",
+        "inpute view": ['add notes'],
+        "arguments": ['title, description'],
+        "func": add_notes
+    },
+    {
+        "name": "remove_notes",
+        "inpute view": ['remove notes'],
+        "arguments": ['title'],
+        "func": remove_notes
     }
     ]
