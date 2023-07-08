@@ -2,6 +2,8 @@ import os
 import shutil
 from pathlib import Path
 import time
+import re
+
 
 def loading_bar(total, interval):
     for i in range(total):
@@ -31,17 +33,15 @@ def category(extension):
         return 'Unknown extensions'
 
 # Transliteration from Cyrillic to Latin.
-def normalize(name):
-    CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
-    TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
-                   "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
-
-    TRANS = {}
-    for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
-        TRANS[ord(c)] = l
-        TRANS[ord(c.upper())] = l.upper()
-
-    return name.translate(TRANS).replace('_', '').replace(' ', '_')
+def normalize(s):
+    s2 = s.translate(TRANS)
+    l = s2.split('.')
+    if len(l) > 1:
+        ext = '.' + l.pop()
+        s2 = '.'.join(l)
+    else:
+        ext =''
+    return re.sub(r'[^a-zA-Z0-9]', '_', s2) + ext
 
 
 # Unpack archives and move their contents to the "archives" folder.
@@ -103,7 +103,6 @@ def initialize_trans():
     TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
                    "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
 
-    global TRANS  # Declare TRANS as a global variable
     for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
         TRANS[ord(c)] = l
         TRANS[ord(c.upper())] = l.upper()
@@ -117,6 +116,5 @@ if __name__ == "__main__":
     path = Path(input("Enter the path to the folder: "))
     loading_bar(50, 0.1)
     sort_files_in_this_path(path)
-    
 
 
