@@ -47,7 +47,19 @@ class Notebook:
                     print("- ", tag.name)
                 print("Опис:", note.description)
                 print()
+                
+    def search_notes_by_tag(self, tag_name):
+        matching_notes = []
+        for note in self.notes:
+            for tag in note.tags:
+                if tag.name.lower() == tag_name.lower():
+                    matching_notes.append(note)
+                    #Stop check, if tag in found in note
+                    break
+        return matching_notes
     
+    def sort_notes_by_tag(self):
+        self.notes.sort(key=lambda note: [tag.name.lower() for tag in note.tags])
 
 # notebook = Notebook()   # в мейн?
 
