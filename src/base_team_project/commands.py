@@ -1,13 +1,16 @@
 
 
 import difflib
-from memory import Record, Teg, Notes
-
+from sorter import sort_files_in_this_path
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
+from common_functions import STR_EPIC_COMMANDS, YELLOW,RESET,BLUE,GREEN
+from memory import Record
 
 def get_command_input(Input_message=''):
     Input_value = None
     while Input_value is None:
-        Input_value = input(f'{Input_message} ')
+        Input_value = prompt(Input_message, completer=completer)
     return Input_value
 
 #Функція find_closest_command(user_input) знаходить найближчу команду до введеної користувачем, за допомогою алгоритму Левенштейну.
@@ -16,7 +19,7 @@ def find_closest_command(user_input):
     if closest_command:
         closest_command = closest_command[0]
         for command_dict in commands:
-            if closest_command in command_dict["inpute view"]:
+            if closest_command in command_dict["input view"]:
                 cmd = command_dict
         if cmd:
             return cmd
@@ -24,7 +27,6 @@ def find_closest_command(user_input):
             return None
     else:
         return None
-
 
 def input_error(func):
     def wrapper(*arg):
@@ -70,7 +72,24 @@ def show_all(*arg):
 def find_user(*arg):
     result = arg[0].find_users(arg[1])
     return result if result else "No matches found among contacts."
-     
+
+def help_commands(*arg):
+    l_cmd = []
+    l_cmd.append(STR_EPIC_COMMANDS)
+    for cmd in commands:
+        s = "Command:" + YELLOW + f"{cmd.get('name')}" + RESET
+        s2 = "For calling write" + GREEN + f":{cmd['input view'][0]}"+ RESET + ',' + GREEN + f" {cmd['input view'][1]}" + RESET + " or " + GREEN + f"{cmd['input view'][2]}" + RESET
+        s = '|{:<40}|{:<110}|'.format(s, s2)
+        if len(cmd["arguments"]) > 0:
+            s3 = "Need arguments:" + BLUE + f"{cmd['arguments']}" + RESET
+            s3 = '{:<50}'.format(s3)
+            s += s3
+        l_cmd.append(s)
+    return l_cmd
+
+def sort_files(*arg):#first ALWAYS address book. next every you need, just ignore the first
+    sort_files_in_this_path(arg[1])
+          
 def ending(*arg):
     return 'Goodbye!'
 
@@ -90,50 +109,64 @@ def remove_notes(*arg):
     else:
         return 'Note not found.'
 
-input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',
-                  'get number contact','get phone','show phone','show all contacts','show book','show all','goodbye','close','end','search','find','find user']
+input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
+                  'get number contact','get phone','show phone','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands","need help"]
+# Ініціалізація автодоповнювача зі списком команд
+completer = WordCompleter(input_variants)
 
 # Define available commands
 commands = [
     {
         "name": "greet",
-        "inpute view":["hello",'hi','start'],
+        "input view":["hello",'hi','start'],
         "arguments": [],
         "func":greetings
     },
     {
-        "name": "add_new_contact",
-        "inpute view": ['add contact','new contact','create contact'],
+        "name": "add new contact",
+        "input view": ['add contact','new contact','create contact'],
         "arguments": ["name", "phone"],
         "func":add_new_contact
     },
     {
-        "name": "change_exist_contact",
-        "inpute view": ['change contact','change phone','change contact details'],
+        "name": "change exist contact",
+        "input view": ['change contact','change phone','change contact details'],
         "arguments": ["name","phone"],
         "func":change_exist_contact
     },
     {
-        "name": "show_phone",
-        "inpute view": ['get number contact','get phone','show phone'],
+        "name": "show phone",
+        "input view": ['get number contact','get phone','show phone'],
         "arguments": ["name"],
         "func":show_phone
     },
     {
-        "name": "show_all",
-        "inpute view":  ['show all contacts','show book','show all'],
+        "name": "show all",
+        "input view":  ['show all contacts','show book','show all'],
         "arguments": [],
         "func":show_all
     },
     {
-        "name": "find_user",
-        "inpute view":  ['search','find','find user'],
+        "name": "find user",
+        "input view":  ['search','find','find user'],
         "arguments": ['text_for_search'],
         "func":find_user
     },
     {
+        "name": "help",
+        "input view": ["help","commands","need help"],
+        "arguments": [],
+        "func":help_commands
+    },
+    {
+        "name": "sort",
+        "input view": ["sort","sort files","need sort"],
+        "arguments": ['path to the folder'],
+        "func":sort_files
+    },
+    {
         "name": "ending",
-        "inpute view": ['goodbye','close','end'],
+        "input view": ['goodbye','close','end'],
         "arguments": [],
         "func":ending
     },
@@ -150,6 +183,3 @@ commands = [
         "func": remove_notes
     }
     ]
-
-# def get_command(name):
-#     return list(filter(lambda cmd: cmd["name"] == name, commands))[0]
