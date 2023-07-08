@@ -1,9 +1,21 @@
 import os
 import shutil
 from pathlib import Path
+import time
 
+def loading_bar(total, interval):
+    for i in range(total):
+        progress = (i + 1) / total
+        bar_length = 30
+        filled_length = int(bar_length * progress)
+        bar = '▇︎' * filled_length + '-' * (bar_length - filled_length)
+        percentage = progress * 100
+        print(f'Progress: [{bar}] {percentage:.2f}%', end='\r')
+        time.sleep(interval)
 
-# Перевірка на розширення.
+TRANS = {}  # Global variable TRANS
+
+# Check file extension.
 def category(extension):
     if extension in ['JPEG', 'PNG', 'JPG', 'SVG']:
         return 'images'
@@ -18,8 +30,7 @@ def category(extension):
     else:
         return 'Unknown extensions'
 
-
-# Транслітерація кириличного алфавіту на латинський.
+# Transliteration from Cyrillic to Latin.
 def normalize(name):
     CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
     TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
@@ -30,10 +41,10 @@ def normalize(name):
         TRANS[ord(c)] = l
         TRANS[ord(c.upper())] = l.upper()
 
-    return name.translate(TRANS, '_').replace('_', '').replace(' ', '_')
+    return name.translate(TRANS).replace('_', '').replace(' ', '_')
 
 
-# Розпаковує архіви та переносить їх вміст до папки "archives".
+# Unpack archives and move their contents to the "archives" folder.
 def unpack_archives(path):
     for item in os.listdir(path):
         item_path = os.path.join(path, item)
@@ -44,49 +55,68 @@ def unpack_archives(path):
             shutil.unpack_archive(item_path, archive_folder)
             os.remove(item_path)
 
-
-# Сортує файли в папці.
+# Sort files in the given path.
 def sort_files(path):
     for item in os.listdir(path):
         item_path = os.path.join(path, item)
-        
-        # Якщо це файл
+
+        # If it's a file
         if os.path.isfile(item_path):
-            # Отримуємо розширення файлу
+            # Get the file extension
             extension = item.split('.')[-1].upper()
-            
-            # Якщо розширення відоме, переміщуємо файл
+
+            # If the extension is known, move the file
             if extension in ['JPEG', 'PNG', 'JPG', 'SVG', 'AVI', 'MP4', 'MOV', 'MKV', 'DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX', 'MP3', 'OGG', 'WAV', 'AMR']:
                 category_folder = category(extension)
                 category_path = os.path.join(path, category_folder)
-                
+
                 if not os.path.exists(category_path):
                     os.mkdir(category_path)
+
+                # Normalize the filename
+                normalized_name = normalize(item)
+                normalized_name_with_extension = f"{normalized_name}.{extension}"
                 
                 src_path = os.path.join(path, item)
-                dst_path = os.path.join(category_path, item)
+                dst_path = os.path.join(category_path, normalized_name_with_extension)
                 shutil.move(src_path, dst_path)
-            
-            # Якщо розширення невідоме, не робимо нічого
+
+            # If the extension is unknown, do nothing
             else:
                 pass
-        
-        # Якщо це папка
+
+        # If it's a directory
         elif os.path.isdir(item_path):
             if item not in ['archives', 'video', 'audio', 'documents', 'images']:
                 sort_files(item_path)
-                # Удаляем пустую папку после рекурсивного вызова
+                # Remove empty directory after recursive call
                 if not os.listdir(item_path):
                     os.rmdir(item_path)
+            elif item in ['archives', 'video', 'audio', 'documents', 'images']:
+                # Skip the predefined category folders
+                continue
             else:
                 shutil.rmtree(item_path)
 
+def initialize_trans():
+    CYRILLIC_SYMBOLS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ"
+    TRANSLATION = ("a", "b", "v", "g", "d", "e", "e", "j", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
+                   "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya", "je", "i", "ji", "g")
 
-def main():
-    path = Path(input("Введіть шлях до папки: "))
+    global TRANS  # Declare TRANS as a global variable
+    for c, l in zip(CYRILLIC_SYMBOLS, TRANSLATION):
+        TRANS[ord(c)] = l
+        TRANS[ord(c.upper())] = l.upper()
+
+def sort_files_in_this_path(path):
+    initialize_trans()  # Initialize TRANS
     unpack_archives(path)
     sort_files(path)
 
-
 if __name__ == "__main__":
-    main()
+    path = Path(input("Enter the path to the folder: "))
+    loading_bar(50, 0.1)
+    sort_files_in_this_path(path)
+    
+
+
