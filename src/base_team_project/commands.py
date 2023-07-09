@@ -109,6 +109,48 @@ def remove_notes(*arg):
     else:
         return 'Note not found.'
 
+def edit_title(*arg):
+    contact = arg[0].get(arg[1])
+    if contact:
+        contact.edit_title(arg[2])
+        return f'Contact a title was changed.'
+    else:
+        return "Can't find such contact. Try again."
+
+def search_notes_by_title(*arg):
+    mathcing_notes = []
+    for note in arg[0].notes:
+        if note.title.lower() == arg[1].lower():
+            mathcing_notes.append(note)
+    return mathcing_notes
+
+def sort_notes_by_tag(*arg):
+    arg[0].sort_notes_by_tag()
+    return 'Notes sorted by tag.'
+
+def edit_description(*arg):
+    note_title = get_command_input("Enter the title of the note to edit: ")
+    new_description = get_command_input("Enter the new description: ")
+    matching_notes = arg[0].search_notes_by_title(note_title)
+    if matching_notes:
+        for note in matching_notes:
+            note.edit_description(new_description)
+        return 'Note description edited.'
+    else:
+        return 'Note not found.'
+
+def edit_note_title(*arg):
+    old_title = get_command_input("Enter the current title of the note: ")
+    new_title = get_command_input("Enter the new title: ")
+    matching_notes = arg[0].search_notes_by_title(old_title)
+    if matching_notes:
+        for note in matching_notes:
+            note.edit_title(new_title)
+        return 'Note title edited.'
+    else:
+        return 'Note not found'
+
+
 input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
                   'get number contact','get phone','show phone','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands","need help"]
 # Ініціалізація автодоповнювача зі списком команд
@@ -182,4 +224,38 @@ commands = [
         "arguments": ['title'],
         "func": remove_notes
     }
-    ]
+    {
+        "name": "edit title",
+        "input view": ["edit tags", "change tags"],
+        "arguments": ["note_title", "new_tags"],
+        "func": edit_title
+    }
+    
+    {
+        "name": "search_notes_by_title",
+        "input view": ["search title", "find title"],
+        "arguments": ["note_title"],
+        "func": search_notes_by_title
+    }
+    
+    {
+        "name": "sort_notes_by_tag",
+        "input view": ["sort notes by tag", "sort by tag"],
+        "arguments": [],
+        "func": sort_notes_by_tag
+    }
+    
+    {
+        "name": "edit_description",
+        "input view": ["edit description", "change description"],
+        "arguments": [],
+        "func": edit_description
+    }
+    
+    {
+        "name": "edit_note_title",
+        "input view": ["edit note title", "change note title"]
+        "arguments": [],
+        "func": edit_note_title
+    }
+]

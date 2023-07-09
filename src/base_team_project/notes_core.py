@@ -25,10 +25,21 @@ class Notes:
     def edit_tags(self, new_tags):
         if isinstance(new_tags, list):
             self.tags = new_tags
+        else:
+            self.tags = []
             
     def edit_description(self, new_description):
         self.description = new_description
 
+    def change_rec_info(self, change_field, new_info):
+        match change_field:
+            case 'title':
+                self.edit_title(new_info)
+            case 'tags':
+                self.edit_tags(new_info)
+            case 'description':
+                self.edit_description(new_info)
+                
 class Notebook:
     def __init__(self):
         self.notes = []
