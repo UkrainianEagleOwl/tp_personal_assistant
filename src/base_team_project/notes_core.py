@@ -18,6 +18,16 @@ class Notes:
         if self.tags:
             tags_str = ", ".join(tag.name for tag in self.tags)
         return "Title: {}\nTags: {}\nDescription: {}".format(self.title, tags_str, self.description)
+    
+    def edit_title(self, new_title):
+        self.title = new_title
+        
+    def edit_tags(self, new_tags):
+        if isinstance(new_tags, list):
+            self.tags = new_tags
+            
+    def edit_description(self, new_description):
+        self.description = new_description
 
 class Notebook:
     def __init__(self):
