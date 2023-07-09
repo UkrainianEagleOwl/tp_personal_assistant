@@ -1,10 +1,10 @@
 
 
-from commands import find_closest_command,get_command_input
-from save_load_book import save_address_book,load_address_book
-from memory import * #AddressBook,SetterValueIncorrect,Name,Phone,Birthday,Address,Email
-from notes_core import Notebook
-from common_functions import STR_EPIC_ASSISTANT,YELLOW
+from .commands import find_closest_command,get_command_input
+from .save_load_book import save_address_book,load_address_book
+from .memory import * #AddressBook,SetterValueIncorrect,Name,Phone,Birthday,Address,Email
+from .notes_core import Notebook
+from .common_functions import STR_EPIC_ASSISTANT,YELLOW
 
 def start_work():
     # Load the address book from storage, or create a new one if it doesn't exist

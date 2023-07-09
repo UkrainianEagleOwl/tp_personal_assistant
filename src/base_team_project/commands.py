@@ -1,12 +1,12 @@
 
 
 import difflib
-from sorter import sort_files_in_this_path
+from .sorter import sort_files_in_this_path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from common_functions import *
-from memory import Record,SetterValueIncorrect,AddressBook
-from notes_core import *
+from .common_functions import *
+from .memory import Record,SetterValueIncorrect,AddressBook
+from .notes_core import *
 
 
 def get_command_input(Input_message='',check_class = None,need_comp = True):
