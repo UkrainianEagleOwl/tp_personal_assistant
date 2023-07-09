@@ -4,13 +4,29 @@ import difflib
 from sorter import sort_files_in_this_path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from common_functions import STR_EPIC_COMMANDS, YELLOW,RESET,BLUE,GREEN
-from memory import Record
+from common_functions import *
+from memory import Record,SetterValueIncorrect,AddressBook
+from notes_core import *
 
-def get_command_input(Input_message=''):
+
+def get_command_input(Input_message='',check_class = None,need_comp = True):
     Input_value = None
-    while Input_value is None:
-        Input_value = prompt(Input_message, completer=completer)
+    while True:
+        if need_comp:
+            Input_value = prompt(Input_message, completer=completer)
+        else:
+            Input_value = prompt(Input_message)
+        if Input_value == 'pass':
+            Input_value = None
+        if check_class:
+            try:
+                check_obj = check_class(Input_value)
+            except SetterValueIncorrect as e:
+                print(e.message)
+            else:
+                break
+        elif Input_value:
+            break
     return Input_value
 
 #Функція find_closest_command(user_input) знаходить найближчу команду до введеної користувачем, за допомогою алгоритму Левенштейну.
@@ -29,51 +45,51 @@ def find_closest_command(user_input):
         return None
 
 def input_error(func):
-    def wrapper(*arg):
+    def wrapper(*arg,a_book = AddressBook,n_book = Notebook):
         try:
-            result = func(*arg)
+            result = func(*arg,a_book = a_book,n_book = n_book)
             return result
         except KeyError:
-            print("The contact is missing. ")
+            print( RED + "The contact is missing. Please try again" + RESET)
         except IndexError:
-            print("Enter the name and number separated by a space. ")
+            print(RED + "The contact is missing. Please try again" + RESET) 
         except ValueError:
-            print("ValueError. Please try again. ")
+            print(RED + "ValueError. Please try again." + RESET)
     return wrapper    
         
-def greetings(*arg):
+def greetings(*arg,a_book = AddressBook,n_book = Notebook):
     return "Hello. How i can help you?"
 
 @input_error
-def add_new_contact(*arg):#first always address book,second Name, third phone
-    arg[0].add_record(Record(arg[1].capitalize(),arg[2]))
+def add_new_contact(*arg,a_book = AddressBook,n_book = Notebook):
+    a_book.add_record(Record(name=arg[0].capitalize(),phone=arg[1],birthday=arg[2],email=arg[3],address=arg[4]))
     return 'Contact added.'
 
 @input_error
-def change_exist_contact(*arg):#first always address book
-    contact = arg[0].get(arg[1])
+def change_exist_contact(*arg,a_book = AddressBook,n_book = Notebook):
+    contact = a_book.get(arg[0])
     if contact:
-        contact.change_n_phone(0, arg[2])
+        contact.change_record_indo(arg[1],arg[2])
         return f"Contact's phone was changed."
     else:
         return "Can't find such contact. Try again."
 
 @input_error
-def show_phone(*arg):#first always address book second name
-    if arg[1] in arg[0].data:
-        return f"The phone number of {arg[1]} is {arg[0].data[arg[1]].user_phones[0]}. "
+def show_contact(*arg,a_book = AddressBook,n_book = Notebook):#first always address book second name
+    if arg[0] in a_book.data:
+        return str(a_book.data[arg[0]])
     else:
-        return f"Contact {arg[1]} does not exist. "
+        return f"Contact {arg[0]} does not exist. "
 
-def show_all(*arg):
-    return [str(contact) for contact in arg[0].values()]
+def show_all(*arg,a_book = AddressBook,n_book = Notebook):
+    return [str(contact) for contact in a_book.values()]
 
 @input_error
-def find_user(*arg):
-    result = arg[0].find_users(arg[1])
+def find_user(*arg,a_book = AddressBook,n_book = Notebook):
+    result = a_book.find_users(arg[0])
     return result if result else "No matches found among contacts."
 
-def help_commands(*arg):
+def help_commands(*arg,a_book = AddressBook,n_book = Notebook):
     l_cmd = []
     l_cmd.append(STR_EPIC_COMMANDS)
     for cmd in commands:
@@ -87,30 +103,34 @@ def help_commands(*arg):
         l_cmd.append(s)
     return l_cmd
 
-def sort_files(*arg):#first ALWAYS address book. next every you need, just ignore the first
-    sort_files_in_this_path(arg[1])
-          
-def ending(*arg):
-    return 'Goodbye!'
+@input_error
+def remove_contact(*arg,a_book = AddressBook,n_book = Notebook):
+    a_book.remove_record(arg[0])
+    return 'Contact was removed.'
 
-def add_notes(*arg):
-    title = get_command_input("Enter note title:")
-    description = get_command_input("Enter note description:")
+def sort_files(*arg,a_book = AddressBook,n_book = Notebook):#first ALWAYS address book. next every you need, just ignore the first
+    sort_files_in_this_path(arg[0])
+
+@input_error
+def add_note(*arg,a_book = AddressBook,n_book = Notebook): 
     tags = get_command_input("Enter note tags (comma-separated):").split(",")
     tags = [Teg(tag.strip()) for tag in tags]
-    note = Notes(title, tags, description)
-    arg[0].add_note(note)
-    return 'Note added.'
+    note = Note(arg[0], tags, arg[1])
+    n_book.add_note(note)
+    return 'Note added. \n' + str(note)
 
-def remove_notes(*arg):
-    title = get_command_input("Enter note title to remove:")
-    if arg[0].remove_note(title):
-        return 'Note removed.'
-    else:
-        return 'Note not found.'
+@input_error
+def remove_note(*arg,a_book = AddressBook,n_book = Notebook):
+    title = arg[0]
+    n_book.remove_note(title)
+    return 'Note removed.'
+
+def ending(*arg,a_book = AddressBook,n_book = Notebook):
+    return 'Goodbye!'
 
 input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
-                  'get number contact','get phone','show phone','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands","need help"]
+                  'get contact','show contact','show person','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands",
+                  "need help",'remove note','delete note','get note out','add note', 'new note','create note','remove contact','delete contact','take out contact']
 # Ініціалізація автодоповнювача зі списком команд
 completer = WordCompleter(input_variants)
 
@@ -125,20 +145,26 @@ commands = [
     {
         "name": "add new contact",
         "input view": ['add contact','new contact','create contact'],
-        "arguments": ["name", "phone"],
+        "arguments": ["name", "phone","birthday","email","address"],
         "func":add_new_contact
     },
     {
         "name": "change exist contact",
         "input view": ['change contact','change phone','change contact details'],
-        "arguments": ["name","phone"],
+        "arguments": ["name","changed field","new value"],
         "func":change_exist_contact
     },
     {
-        "name": "show phone",
-        "input view": ['get number contact','get phone','show phone'],
+        "name": "remove contact",
+        "input view": ['remove contact','delete contact','take out contact'],
         "arguments": ["name"],
-        "func":show_phone
+        "func":remove_contact
+    },
+    {
+        "name": "show contact",
+        "input view": ['get contact','show contact','show person'],
+        "arguments": ["name"],
+        "func":show_contact
     },
     {
         "name": "show all",
@@ -171,15 +197,15 @@ commands = [
         "func":ending
     },
     {
-        "name": "add_notes",
-        "inpute view": ['add notes'],
-        "arguments": ['title, description'],
-        "func": add_notes
+        "name": "add_note",
+        "input view": ['add note', 'new note','create note'],
+        "arguments": ['title', 'description'],
+        "func": add_note
     },
     {
-        "name": "remove_notes",
-        "inpute view": ['remove notes'],
+        "name": "remove_note",
+        "input view": ['remove note','delete note','get note out'],
         "arguments": ['title'],
-        "func": remove_notes
+        "func": remove_note
     }
     ]

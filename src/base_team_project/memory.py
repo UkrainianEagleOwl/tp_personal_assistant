@@ -3,6 +3,7 @@
 import re
 import json
 import csv
+from common_functions import BLUE,RED,RESET
 from datetime import datetime
 from collections import UserDict
 
@@ -19,6 +20,10 @@ class AddressBook(UserDict):
     def add_record(self, aRecord):
         # Method to add a record to the address book
         self.data[aRecord.user_name.value] = aRecord
+
+    def remove_record(self, name):
+        # Method to add a record to the address book
+        self.data.pop(name)
 
     def find_in_values(self, aRecord):
         # Method to find a record in the address book's values
@@ -105,12 +110,16 @@ class Field():
             return self.value == other.value
         return False
 
-    def __init__(self, value = ''):
+    def __init__(self, new_value = ''):
         # Constructor to initialize the field with a value
-        self._value = value
+        self._value = new_value
 
 
 class Name(Field):
+    def __init__(self, new_value = ''):
+        # Constructor to initialize the field with a value
+        self.value = new_value
+
     # Class representing a name field, which is a subclass of Field
     @property
     def value(self):
@@ -130,6 +139,10 @@ class Name(Field):
 
 
 class Phone(Field):
+    def __init__(self, new_value = ''):
+        # Constructor to initialize the field with a value
+        self.value = new_value
+
     # Class representing a phone field, which is a subclass of Field
 
     @property
@@ -145,18 +158,23 @@ class Phone(Field):
                 new_value = str(new_value)
             except TypeError:
                 raise SetterValueIncorrect(
-                    'Only correct type of phone numbers accepted')
+                    RED +
+                    'Incorrect type of information for phone number.' + RESET)
             
-        # if re.search(r"[+]380[(]\d{2}[)]\d{3}[-]\d{1,2}[-]\d{2,3}(?=.{1,17})", new_value):
-        if new_value.isdigit():
+        if re.search(r"^\+?[0-9]{1,4}\s?[0-9]{4,14}$", new_value):
             self._value = new_value
         else:
-            raise SetterValueIncorrect('Only correct type of phone numbers accepted')
+            raise_mesage = RED + 'You write phone number incorrectly. \n' + RESET + 'Number must begin with plus, and be without spaces,hyphen or brackets. Example: ' + BLUE + '"+380990658131"' + RESET
+            raise SetterValueIncorrect(raise_mesage)
         
     def __str__(self):
         return f'Phone: {self.value}'
 
 class Birthday(Field):
+    def __init__(self, new_value = ''):
+        # Constructor to initialize the field with a value
+        self.value = new_value
+
     # Class representing a birthday field, which is a subclass of Field
 
     @property
@@ -166,33 +184,111 @@ class Birthday(Field):
 
     @value.setter
     def value(self, new_value):
-        # Setter method for the value property
-        if isinstance(new_value, datetime):
+        if new_value == None:
             self._value = new_value
-        elif isinstance(new_value, str):
-            try:
-                self._value = datetime.strptime(new_value, '%d %B %Y')
-            except:
-                raise SetterValueIncorrect('Incorrect string type of data')
         else:
-            raise SetterValueIncorrect('Only string data or datetime accepted')
+            # Setter method for the value property
+            if isinstance(new_value, datetime):
+                self._value = new_value
+            elif isinstance(new_value, str):
+                try:
+                    self._value = datetime.strptime(new_value, '%d/%m/%Y') # Output: 28/06/2023
+                except:
+                    raise_mesage = RED + 'You write birthday data incorrectly. \n' + RESET + 'Format of birthday data is day/month/year. Example: ' + BLUE + '"28/06/2023"' + RESET
+                    raise SetterValueIncorrect(raise_mesage)
+            else:
+                raise SetterValueIncorrect( RED +'Only string data or datetime accepted' + RESET)
     
     def __str__(self) -> str:
-        return f'Birthday: {self.value.strftime()}'
+        return f'Birthday: {self.value.strftime("%d/%m/%Y") if self.value else None}'
 
+class Email(Field):
+    def __init__(self, new_value = ''):
+        # Constructor to initialize the field with a value
+        self.value = new_value
+
+    @property
+    def value(self):
+        # Getter method for the value property
+        return self._value
+
+    @value.setter
+    def value(self, new_value):
+        if new_value == None:
+            self._value = new_value
+        else:
+            if not isinstance(new_value, str):
+                try:
+                    new_value = str(new_value)
+                except TypeError:
+                    raise SetterValueIncorrect(RED +
+                        'Incorrect type of information for email.' + RESET)
+                
+            if re.search(r'^[\w\.-]+@[\w\.-]+\.\w+$', new_value):
+                self._value = new_value
+            else:
+                raise_mesage = RED + 'You write email incorrectly. \n' + RESET + 'Here is a template for email: ' + BLUE + '"test@example.com""' + RESET
+                raise SetterValueIncorrect(raise_mesage)
+    
+    def __str__(self) -> str:
+        return f'Email: {self.value}'
+
+class Address(Field):
+    def __init__(self, new_value = ''):
+        # Constructor to initialize the field with a value
+        self.value = new_value
+
+    @property
+    def value(self):
+        # Getter method for the value property
+        return self._value
+
+    @value.setter
+    def value(self, new_value):
+        if new_value == None:
+            self._value = new_value
+        else:
+            if not isinstance(new_value, str):
+                try:
+                    new_value = str(new_value)
+                except TypeError:
+                    raise SetterValueIncorrect(RED +
+                        'Incorrect type of information for address.' + RESET)
+                
+            if re.search(r'^\w+\s+\d+(?:,\s+\w+)?(?:,\s+\w+)?$', new_value):
+                self._value = new_value
+            else:
+                raise_mesage = RED + 'You write address incorrectly. \n' + RESET + 'The correct entry of the address is the street, number, city and, if desired, the country. Here is a template: ' + BLUE + '"Potyomkinskya 30, Kyiv"' + RESET
+                raise SetterValueIncorrect(raise_mesage)
+            
+    def __str__(self) -> str:
+        return f'Address: {self.value}'
 
 class Record():
     # Class representing a record
+    @staticmethod
+    def check_argument_for_init(input_str,class_name):
+        match class_name:
+            case 'name':
+                return Name(input_str)
+            case 'phone':
+                return Phone(input_str)
+            case 'email':
+                return Email(input_str)
+            case 'birthday':
+                return Birthday(input_str)
+            case 'address':
+                return Address(input_str)
+            case _:
+                return input_str
 
-    def __init__(self, name, phone=None, birthday=None):
+    def __init__(self, name, phone=None, birthday=None, email=None,address=None):
         # Constructor to initialize the record with a name, phone, and birthday
+        self.user_name = name if isinstance(name, Name) else self.check_argument_for_init(name,'name')
         self.user_phones = []
-        self.user_birthday = birthday
-
-        if isinstance(name, str):
-            self.user_name = Name(name)
-        elif isinstance(name, Name):
-            self.user_name = name
+        self.user_birthday = birthday if isinstance(birthday, Birthday) else self.check_argument_for_init(birthday,'birthday')
+        self.user_email = email if isinstance(email, Email) else self.check_argument_for_init(email,'email')
+        self.user_address = address if isinstance(address, Address) else self.check_argument_for_init(address,'address')
         if phone:
             self.add_phone(phone)
 
@@ -204,26 +300,30 @@ class Record():
 
     def __str__(self):
         phone_numbers = ' | '.join(str(phone) for phone in self.user_phones)
-        return '|{:^10}|\n|{:^20}| {:^10}|\n'.format(str(self.user_name), phone_numbers, str(self.user_birthday.date()) if self.user_birthday else '')
-
+        return '|{:^10}|\n|{:^20}| {:^10}| {:^10}|{:^10}|\n'.format(str(self.user_name), phone_numbers, 
+                                                                    str(self.user_birthday) if self.user_birthday else '',str(self.user_email) if self.user_email else '',
+                                                                    str(self.user_address) if self.user_address else '')
     
     def to_dict(self):
         #create dictionary based on class record
         return {
             'user_name': self.user_name.value,
             'user_phones': [phone.value for phone in self.user_phones],
-            'user_birthday': self.user_birthday.isoformat() if self.user_birthday else None
+            'user_birthday': str(self.user_birthday) if self.user_birthday else None,
+            'user_email': self.user_email if self.user_email else None,
+            'user_email': self.user_address if self.user_address else None
             }
 
     @classmethod
     def from_dict(cls, data):
         #method get record from dictionary form
-        name = Name(data.get('user_name'))
+        data_name = Name(data.get('user_name'))
         phones_data = data.get('user_phones', [])
         phones = [Phone(phone_number) for phone_number in phones_data]
-        birthday = datetime.fromisoformat(
-            data['user_birthday']) if data['user_birthday'] else None
-        record = Record(name, birthday =  birthday)
+        data_birthday = datetime.strptime(data['user_birthday'],"%d/%m/%Y")
+        data_email = data.get('user_email')
+        data_address = data.get('user_address')
+        record = Record(data_name, birthday = data_birthday,email=data_email,address=data_address)
         for phone in phones:
             record.add_phone(phone)
         return record
@@ -252,6 +352,17 @@ class Record():
     def change_n_phone(self, aPhoneIndex, aNewPhone):
         # Method to change the phone at a specified index to a new phone
         self.user_phones[aPhoneIndex].value = aNewPhone
+
+    def change_record_indo(self,change_field,new_info):
+        match change_field:
+            case 'phone':
+                self.user_phones[0].value = new_info if isinstance(new_info, Phone) else self.check_argument_for_init(new_info,'phone')
+            case 'email':
+                self.user_email = new_info if isinstance(new_info, Email) else self.check_argument_for_init(new_info,'email')
+            case 'birthday':
+                self.user_birthday = new_info if isinstance(new_info, Birthday) else self.check_argument_for_init(new_info,'birthday')
+            case 'address':
+                self.user_address = new_info if isinstance(new_info, Address) else self.check_argument_for_init(new_info,'address')
 
     def days_to_birthday(self):
         # Method to calculate the number of days to the birthday

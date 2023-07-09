@@ -4,7 +4,7 @@ class Teg:
         self.name = name
 
 
-class Notes:
+class Note:
     def __init__(self, title, tags, description):
         self.title = title
         if isinstance(tags, list):
