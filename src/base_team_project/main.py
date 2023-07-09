@@ -14,6 +14,7 @@ def start_work():
     # Load the notes book from storage, or create a new one if it doesn't existя
     notes_book = Notebook()
     print(STR_EPIC_ASSISTANT)
+    address_book.get_birthdays_per_week()
     return (address_book,notes_book)
 
 def command_exe(command = dict,adress_book = AddressBook,note_book = Notebook):
@@ -83,6 +84,7 @@ def main():
     # Save the address book to storage
     save_address_book(a_book)
     # here will be save notebook in storage
+
 
 if __name__ == '__main__':
     main()
