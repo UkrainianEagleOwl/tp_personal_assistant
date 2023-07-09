@@ -15,11 +15,9 @@ class AddressBookTests(unittest.TestCase):
     def tearDown(self):
         # Delete the test save folder and file if they exist
         save_folder = Path(sys.executable).parent / "save"
-        file_path = save_folder / "address_book.json"
+        file_path = save_folder / "phonebook_test.json"
         if file_path.exists():
             file_path.unlink()
-        if save_folder.exists():
-            save_folder.rmdir()
 
     @staticmethod
     def create_simple_book():
@@ -39,10 +37,10 @@ class AddressBookTests(unittest.TestCase):
 
     def test_save_load_address_book(self):
         # Call the function to save the AddressBook
-        save_address_book(self.address_book)
+        save_address_book(self.address_book,"phonebook_test.json")
 
         # Check if the file exists
-        file_path = Path(sys.executable).parent / "save" / "address_book.json"
+        file_path = Path(sys.executable).parent / "save" / "phonebook_test.json"
         self.assertTrue(file_path.exists())
         loaded_address_book = load_address_book()
 

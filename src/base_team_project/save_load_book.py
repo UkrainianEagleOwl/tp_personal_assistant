@@ -6,7 +6,7 @@ from .memory import AddressBook
 
 # Save and Load Address book when application begin and end work
 
-def save_address_book(address_book):
+def save_address_book(address_book, FileName = None):
     # Get the path of the executable file
     exe_path = Path(sys.executable)
 
@@ -15,7 +15,10 @@ def save_address_book(address_book):
     save_folder.mkdir(exist_ok=True)
 
     # Construct the file path for saving the AddressBook
-    file_path = save_folder / "phonebook.json"
+    if FileName:
+        file_path = save_folder / FileName
+    else:
+        file_path = save_folder / "phonebook.json"
 
     # Save the AddressBook to the file
     address_book.save_to_json(file_path)
