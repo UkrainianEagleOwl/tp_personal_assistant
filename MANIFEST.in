@@ -3,15 +3,15 @@ tp_personal_assistant/
         base_team_project/
             __init__.py
             commands.py
+            common_functions.py
             main.py
-            memory.py
-            save_load_book.py
-        example_book/
-            
-        tests/
-            __init__.py
             memory_tests.py
+            memory.py
+            notes_core.py
+            save_load_book.py
             save_load_tests.py
+            sorter.py
+        example_book/      
     setup.py
     MANIFEST.in
     CODE_OF_CONDUCT.md

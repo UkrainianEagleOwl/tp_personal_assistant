@@ -2,8 +2,8 @@
 
 import unittest
 import sys
-from memory import AddressBook,Record
-from save_load_book import load_address_book, save_address_book
+from .memory import AddressBook,Record
+from .save_load_book import load_address_book, save_address_book
 from pathlib import Path
 from datetime import datetime
 
