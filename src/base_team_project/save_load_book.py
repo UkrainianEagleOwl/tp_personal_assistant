@@ -2,7 +2,7 @@
 
 import sys
 from pathlib import Path
-from memory import AddressBook
+from .memory import AddressBook
 
 # Save and Load Address book when application begin and end work
 

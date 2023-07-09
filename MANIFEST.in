@@ -1,0 +1,18 @@
+tp_personal_assistant/
+    src/
+        base_team_project/
+            __init__.py
+            commands.py
+            main.py
+            memory.py
+            save_load_book.py
+        example_book/
+            
+        tests/
+            __init__.py
+            memory_tests.py
+            save_load_tests.py
+    setup.py
+    MANIFEST.in
+    CODE_OF_CONDUCT.md
+    README.md

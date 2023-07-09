@@ -2,8 +2,8 @@
 
 import collections
 import difflib
-from save_load_book import load_address_book, save_address_book
-from memory import AddressBook, Record
+from .save_load_book import load_address_book, save_address_book
+from .memory import AddressBook, Record
 
 address_book = AddressBook()
 Person = collections.namedtuple('Person',['name','phone'])

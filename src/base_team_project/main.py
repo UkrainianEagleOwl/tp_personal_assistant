@@ -1,8 +1,8 @@
 
 
-from commands import greetings,get_command_input,find_closest_command
-from save_load_book import save_address_book,load_address_book
-from memory import AddressBook,SetterValueIncorrect
+from .commands import greetings, get_command_input, find_closest_command
+from .save_load_book import save_address_book,load_address_book
+from .memory import AddressBook,SetterValueIncorrect
 
 def main():
     work_book = load_address_book()
