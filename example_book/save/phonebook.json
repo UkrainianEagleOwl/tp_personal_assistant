@@ -1,65 +1,94 @@
 {
-    "Dmytro": {
-        "user_name": "Dmytro",
-        "user_phones": [
-            "380933899329"
-        ],
-        "user_birthday": "14.07.1980"
-    },
-    "Lisa": {
-        "user_name": "Lisa",
-        "user_phones": [
-            "+38066 9932141"
-        ],
-        "user_birthday": "25.08.1970"
-    },
-    "Olesya": {
-        "user_name": "Olesya",
-        "user_phones": [
-            "+380997198632"
-        ],
-        "user_birthday": "12.08.1988"
-    },
-    "Ullia": {
-        "user_name": "Ullia",
-        "user_phones": [
-            "+380997360539"
-        ],
-        "user_birthday": "10.07.1982"
-    },
-    "Biba": {
-        "user_name": "Biba",
-        "user_phones": [
-            "+380683196798"
-        ],
-        "user_birthday": "06.07.1980"
-    },
-    "Dmytro Belousov": {
-        "user_name": "Dmytro Belousov",
-        "user_phones": [
-            "+380990778722"
-        ],
-        "user_birthday": "15.07.1987"
-    },
-    "Dolchik": {
-        "user_name": "Dolchik",
-        "user_phones": [
-            "+38066 999 66 12"
-        ],
-        "user_birthday": "12.10.1990"
-    },
-    "Yelyzaveta": {
-        "user_name": "Yelyzaveta",
-        "user_phones": [
-            "+380660249798"
-        ],
-        "user_birthday": "19.07.1976"
-    },
-    "Kulinich": {
-        "user_name": "Kulinich",
-        "user_phones": [
-            "+380660249798"
-        ],
-        "user_birthday": "19.09.1967"
+    "data": {
+        "Ann": {
+            "user_name": "Ann",
+            "user_phones": [
+                "+3809339090430"
+            ],
+            "user_birthday": null,
+            "user_email": null,
+            "user_address": null
+        },
+        "Dmytro": {
+            "user_name": "Dmytro",
+            "user_phones": [
+                "+380675225150"
+            ],
+            "user_birthday": "14/07/1970",
+            "user_email": "paukd@gmail.com",
+            "user_address": "Leva 16, Kiev, Ukraine"
+        },
+        "Lisa": {
+            "user_name": "Lisa",
+            "user_phones": [
+                "+380669932141"
+            ],
+            "user_birthday": "25/08/1980",
+            "user_email": "lisa@gmail.com",
+            "user_address": "Leva 16, Odessa, Ukraine"
+        },
+        "Olesya": {
+            "user_name": "Olesya",
+            "user_phones": [
+                "+380997198632"
+            ],
+            "user_birthday": "12/08/1988",
+            "user_email": "olesya@gmail.com",
+            "user_address": "Oleniv 40, Lviv, Ukraine"
+        },
+        "Ullia": {
+            "user_name": "Ullia",
+            "user_phones": [
+                "+380997360539"
+            ],
+            "user_birthday": "09/08/1982",
+            "user_email": "ullia@gmail.com",
+            "user_address": "Bogdana 16, Kyiv, Ukraine"
+        },
+        "Biba": {
+            "user_name": "Biba",
+            "user_phones": [
+                "+380683196798"
+            ],
+            "user_birthday": "06/07/2000",
+            "user_email": "biba@gmail.com",
+            "user_address": "Lesi 890, Kharkiv"
+        },
+        "Dmytro Belousov": {
+            "user_name": "Dmytro Belousov",
+            "user_phones": [
+                "+380990778722"
+            ],
+            "user_birthday": "15/07/1987",
+            "user_email": "belousov@gmail.com",
+            "user_address": "Olexandra 18, Kyiv"
+        },
+        "Dolchik": {
+            "user_name": "Dolchik",
+            "user_phones": [
+                "+380669996612"
+            ],
+            "user_birthday": "12/10/1990",
+            "user_email": "dolchik@gmail.com",
+            "user_address": "Aleni 60, Lviv"
+        },
+        "Yelyzaveta": {
+            "user_name": "Yelyzaveta",
+            "user_phones": [
+                "+380660249798"
+            ],
+            "user_birthday": "19/07/1976",
+            "user_email": "yelyzaveta@gmail.com",
+            "user_address": "Voiniv 40, Kyiv"
+        },
+        "Kulinich": {
+            "user_name": "Kulinich",
+            "user_phones": [
+                "+380660249798"
+            ],
+            "user_birthday": "19/09/1960",
+            "user_email": "kulinich@gmail.com",
+            "user_address": "Rusni 300, Kharkiv"
+        }
     }
 }
