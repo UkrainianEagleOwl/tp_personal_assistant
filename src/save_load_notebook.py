@@ -1,25 +1,25 @@
 import os
 import json
 import sys
-from notes_core import Notebook, Note
+from src.notes_core import Notebook, Note
 from pathlib import Path
 
 SAVE_DIR = Path(sys.prefix) / 'save'
 
-def save_notebook(notebook, filename=None):
+def save_notebook(notebook):
     # Создаем директорию save, если она не существует
     if not os.path.exists(SAVE_DIR):
         os.makedirs(SAVE_DIR)
 
     # Сохраняем данные в JSON-файл в папке save
-    file_path = os.path.join(SAVE_DIR, filename)
+    file_path = os.path.join(SAVE_DIR, 'notebook.json')
     with open(file_path, 'w') as file:
         json.dump(notebook.to_dict(), file, indent=4)
-    print(f"Notebook сохранен в файл: {file_path}")
+    # print(f"Notebook сохранен в файл: {file_path}")
 
-def load_notebook(filename):
+def load_notebook():
     # Проверяем существование файла
-    file_path = os.path.join(SAVE_DIR, filename)
+    file_path = os.path.join(SAVE_DIR, 'notebook.json')
     if not os.path.exists(file_path):
         print(f"Файл {file_path} не существует.")
         return None

@@ -1,18 +1,25 @@
 
 
-from .commands import find_closest_command,get_command_input
-from .save_load_book import save_address_book,load_address_book
-from .memory import * #AddressBook,SetterValueIncorrect,Name,Phone,Birthday,Address,Email
-from .notes_core import Notebook
-from .common_functions import STR_EPIC_ASSISTANT,YELLOW
+from src.commands import find_closest_command,get_command_input
+from src.save_load_book import save_address_book,load_address_book
+from src.save_load_notebook import save_notebook , load_notebook
+from src.memory import * #AddressBook,SetterValueIncorrect,Name,Phone,Birthday,Address,Email
+from src.notes_core import Notebook
+from src.common_functions import STR_EPIC_ASSISTANT
+from colorama import init
 
 def start_work():
+    # Initialize colorama
+    init()
+
     # Load the address book from storage, or create a new one if it doesn't exist
     address_book = load_address_book()
     if not address_book:
         address_book = AddressBook()
     # Load the notes book from storage, or create a new one if it doesn't existя
-    notes_book = Notebook()
+    notes_book = load_notebook()
+    if not notes_book:
+        notes_book = Notebook()
     print(STR_EPIC_ASSISTANT)
     address_book.get_birthdays_per_week()
     return (address_book,notes_book)
@@ -83,7 +90,7 @@ def main():
             print("Sorry, i don't understand this your command. Please try again.")
     # Save the address book to storage
     save_address_book(a_book)
-    # here will be save notebook in storage
+    save_notebook(n_book)
 
 
 if __name__ == '__main__':

@@ -1,10 +1,10 @@
 import re
 import json
 import csv
-from .common_functions import BLUE,RED,RESET
 from datetime import datetime, timedelta
 from collections import UserDict
 from prettytable import PrettyTable
+from colorama import Fore,Style
 
 
 class SetterValueIncorrect(Exception):
@@ -26,29 +26,32 @@ class AddressBook(UserDict):
         one_week_interval = timedelta(weeks=1)
         max_date = current_time + one_week_interval
 
+        list_contacts =[]
+
         # Приведення дати народження до поточного року
         for user_data in self.data.values():
-            user_birthday = datetime.strptime(
-                user_data['user_birthday'], "%d.%m.%Y")
-            user_birthday = user_birthday.replace(year=current_time.year)
-            user_data['user_birthday'] = user_birthday
+            if user_data.user_birthday.value:
+                bday = user_data.user_birthday.value
+                bday = bday.replace(year=current_time.year)
+                list_contacts.append(Record(user_data.user_name,user_data.user_phones,bday,user_data.user_email,user_data.user_address))
 
         # Створення списку користувачів, яких потрібно привітати
         birthday_users = []
-        for user_data in self.data.values():
-            user_birthday = user_data['user_birthday']
-            if current_time < user_birthday <= max_date:
-                if user_birthday.weekday() > 4:
-                    greeting_day = days_week[0]
-                else:
-                    greeting_day = days_week[user_birthday.weekday()]
-                user_info = {
-                    'user_name': user_data['user_name'],
-                    'user_phones': ', '.join(user_data['user_phones']),
-                    'user_birthday': user_data['user_birthday'].strftime("%d.%m.%Y"),
-                    'day': '🎂' + ' ' + greeting_day
-                }
-                birthday_users.append(user_info)
+        for user_data in list_contacts:
+            if user_data.user_birthday.value:
+                user_birthday = user_data.user_birthday.value
+                if current_time < user_birthday <= max_date:
+                    if user_birthday.weekday() > 4:
+                        greeting_day = days_week[0]
+                    else:
+                        greeting_day = days_week[user_birthday.weekday()]
+                    user_info = {
+                        'user_name': user_data.user_name.value,
+                        'user_phones': ', '.join([str(x) for x in user_data.user_phones]),
+                        'user_birthday': user_data.user_birthday.value.strftime("%d.%m.%Y"),
+                        'day': '🎂' + ' ' + greeting_day
+                    }
+                    birthday_users.append(user_info)
 
         # Вивід списку користувачів за допомогою prettytable
         table = PrettyTable()
@@ -177,6 +180,9 @@ class Name(Field):
             raise SetterValueIncorrect('Only string accepted')
 
     def __str__(self) -> str:
+        return f'{self.value}'
+    
+    def __repr__(self) -> str:
         return f'Name: {self.value}'
 
 
@@ -200,16 +206,19 @@ class Phone(Field):
                 new_value = str(new_value)
             except TypeError:
                 raise SetterValueIncorrect(
-                    RED +
-                    'Incorrect type of information for phone number.' + RESET)
+                    Fore.RED +
+                    'Incorrect type of information for phone number.' + Style.RESET_ALL)
             
         if re.search(r"^\+?[0-9]{1,4}\s?[0-9]{4,14}$", new_value):
             self._value = new_value
         else:
-            raise_mesage = RED + 'You write phone number incorrectly. \n' + RESET + 'Number must begin with plus, and be without spaces,hyphen or brackets. Example: ' + BLUE + '"+380990658131"' + RESET
+            raise_mesage = Fore.RED + 'You write phone number incorrectly. \n' + Style.RESET_ALL + 'Number must begin with plus, and be without spaces,hyphen or brackets. Example: ' + Fore.BLUE + '"+380990658131"' + Style.RESET_ALL
             raise SetterValueIncorrect(raise_mesage)
         
     def __str__(self):
+        return f'{self.value}'
+    
+    def __repr__(self) -> str:
         return f'Phone: {self.value}'
 
 
@@ -237,12 +246,15 @@ class Birthday(Field):
                 try:
                     self._value = datetime.strptime(new_value, '%d/%m/%Y') # Output: 28/06/2023
                 except:
-                    raise_mesage = RED + 'You write birthday data incorrectly. \n' + RESET + 'Format of birthday data is day/month/year. Example: ' + BLUE + '"28/06/2023"' + RESET
+                    raise_mesage = Fore.RED + 'You write birthday data incorrectly. \n' + Style.RESET_ALL + 'Format of birthday data is day/month/year. Example: ' + Fore.BLUE + '"28/06/2023"' + Style.RESET_ALL
                     raise SetterValueIncorrect(raise_mesage)
             else:
-                raise SetterValueIncorrect( RED +'Only string data or datetime accepted' + RESET)
+                raise SetterValueIncorrect( Fore.RED +'Only string data or datetime accepted' + Style.RESET_ALL)
     
     def __str__(self) -> str:
+        return f'{self.value.strftime("%d/%m/%Y") if self.value else None}'
+    
+    def __repr__(self) -> str:
         return f'Birthday: {self.value.strftime("%d/%m/%Y") if self.value else None}'
 
 class Email(Field):
@@ -264,16 +276,19 @@ class Email(Field):
                 try:
                     new_value = str(new_value)
                 except TypeError:
-                    raise SetterValueIncorrect(RED +
-                        'Incorrect type of information for email.' + RESET)
+                    raise SetterValueIncorrect(Fore.RED +
+                        'Incorrect type of information for email.' + Style.RESET_ALL)
                 
             if re.search(r'^[\w\.-]+@[\w\.-]+\.\w+$', new_value):
                 self._value = new_value
             else:
-                raise_mesage = RED + 'You write email incorrectly. \n' + RESET + 'Here is a template for email: ' + BLUE + '"test@example.com""' + RESET
+                raise_mesage = Fore.RED + 'You write email incorrectly. \n' + Style.RESET_ALL + 'Here is a template for email: ' + Fore.BLUE + '"test@example.com"' + Style.RESET_ALL
                 raise SetterValueIncorrect(raise_mesage)
     
     def __str__(self) -> str:
+        return f'{self.value}'
+    
+    def __repr__(self) -> str:
         return f'Email: {self.value}'
 
 class Address(Field):
@@ -295,35 +310,37 @@ class Address(Field):
                 try:
                     new_value = str(new_value)
                 except TypeError:
-                    raise SetterValueIncorrect(RED +
-                        'Incorrect type of information for address.' + RESET)
+                    raise SetterValueIncorrect(Fore.RED +
+                        'Incorrect type of information for address.' + Style.RESET_ALL)
                 
             if re.search(r'^\w+\s+\d+(?:,\s+\w+)?(?:,\s+\w+)?$', new_value):
                 self._value = new_value
             else:
-                raise_mesage = RED + 'You write address incorrectly. \n' + RESET + 'The correct entry of the address is the street, number, city and, if desired, the country. Here is a template: ' + BLUE + '"Potyomkinskya 30, Kyiv"' + RESET
+                raise_mesage = Fore.RED + 'You write address incorrectly. \n' + Style.RESET_ALL + 'The correct entry of the address is the street, number, city and, if desired, the country. Here is a template: ' + Fore.BLUE + '"Potyomkinskya 30, Kyiv"' + Style.RESET_ALL
                 raise SetterValueIncorrect(raise_mesage)
             
     def __str__(self) -> str:
+        return f'{self.value}'
+    
+    def __repr__(self) -> str:
         return f'Address: {self.value}'
 
 class Record():
     # Class representing a record
     @staticmethod
     def check_argument_for_init(input_str,class_name):
-        match class_name:
-            case 'name':
-                return Name(input_str)
-            case 'phone':
-                return Phone(input_str)
-            case 'email':
-                return Email(input_str)
-            case 'birthday':
-                return Birthday(input_str)
-            case 'address':
-                return Address(input_str)
-            case _:
-                return input_str
+        if class_name == 'name':
+            return Name(input_str)
+        elif class_name == 'phone':
+            return Phone(input_str)
+        elif class_name == 'email':
+            return Email(input_str)
+        elif class_name == 'birthday':
+            return Birthday(input_str)
+        elif class_name == 'address':
+            return Address(input_str)
+        else:
+            return input_str
 
     def __init__(self, name, phone=None, birthday=None, email=None,address=None):
         # Constructor to initialize the record with a name, phone, and birthday
@@ -332,7 +349,9 @@ class Record():
         self.user_birthday = birthday if isinstance(birthday, Birthday) else self.check_argument_for_init(birthday,'birthday')
         self.user_email = email if isinstance(email, Email) else self.check_argument_for_init(email,'email')
         self.user_address = address if isinstance(address, Address) else self.check_argument_for_init(address,'address')
-        if phone:
+        if isinstance(phone, list):
+            self.user_phones = phone
+        elif phone:
             self.add_phone(phone)
 
     def __eq__(self, other):
@@ -351,9 +370,9 @@ class Record():
         return {
             'user_name': self.user_name.value,
             'user_phones': [phone.value for phone in self.user_phones],
-            'user_birthday': str(self.user_birthday) if self.user_birthday else None,
-            'user_email': self.user_email if self.user_email else None,
-            'user_address': self.user_address if self.user_address else None
+            'user_birthday': self.user_birthday.value.strftime("%d/%m/%Y") if self.user_birthday.value else None,
+            'user_email': self.user_email.value if self.user_email else None,
+            'user_address': self.user_address.value if self.user_address else None
             }
 
     @classmethod
@@ -362,9 +381,12 @@ class Record():
         data_name = Name(data.get('user_name'))
         phones_data = data.get('user_phones', [])
         phones = [Phone(phone_number) for phone_number in phones_data]
-        data_birthday = datetime.strptime(data['user_birthday'],"%d/%m/%Y")
-        data_email = data.get('user_email')
-        data_address = data.get('user_address')
+        if data['user_birthday']:
+            data_birthday = datetime.strptime(data['user_birthday'],"%d/%m/%Y")
+        else:
+            data_birthday = None 
+        data_email = Email(data.get('user_email'))
+        data_address = Address(data.get('user_address'))
         record = Record(data_name, birthday = data_birthday,email=data_email,address=data_address)
         for phone in phones:
             record.add_phone(phone)
@@ -396,15 +418,14 @@ class Record():
         self.user_phones[aPhoneIndex].value = aNewPhone
 
     def change_record_indo(self,change_field,new_info):
-        match change_field:
-            case 'phone':
-                self.user_phones[0].value = new_info if isinstance(new_info, Phone) else self.check_argument_for_init(new_info,'phone')
-            case 'email':
-                self.user_email = new_info if isinstance(new_info, Email) else self.check_argument_for_init(new_info,'email')
-            case 'birthday':
-                self.user_birthday = new_info if isinstance(new_info, Birthday) else self.check_argument_for_init(new_info,'birthday')
-            case 'address':
-                self.user_address = new_info if isinstance(new_info, Address) else self.check_argument_for_init(new_info,'address')
+        if change_field == 'phone':
+            self.user_phones[0].value = new_info if isinstance(new_info, Phone) else self.check_argument_for_init(new_info,'phone')
+        elif change_field == 'email':
+            self.user_email = new_info if isinstance(new_info, Email) else self.check_argument_for_init(new_info,'email')
+        elif change_field == 'birthday':
+            self.user_birthday = new_info if isinstance(new_info, Birthday) else self.check_argument_for_init(new_info,'birthday')
+        elif change_field == 'address':
+            self.user_address = new_info if isinstance(new_info, Address) else self.check_argument_for_init(new_info,'address')
 
     def days_to_birthday(self):
         # Method to calculate the number of days to the birthday

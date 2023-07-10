@@ -1,7 +1,7 @@
 import json
 
 
-class Teg:
+class Tag:
     def __init__(self, name):
         self.name = name
    
@@ -9,11 +9,19 @@ class Note:
     def __init__(self, title, tags, description):
         self.title = title
         if isinstance(tags, list):
-            self.tags = tags
-        else:
+            self.tags = [Tag(t) if isinstance(tags, str) else t for t in tags]
+        elif tags is None:
             self.tags = []
+        else:
+            self.tags = Tag(tags) if isinstance(tags, str) else tags
         self.description = description
-    
+   
+    def __repr__(self):
+        tags_str = ""
+        if self.tags:
+            tags_str = ", ".join(tag.name for tag in self.tags)
+        return "Title: {}\nTags: {}\nDescription: {}".format(self.title, tags_str, self.description)
+       
     def to_dict(self):
         notes_data = []
         for note in self.notes:
@@ -24,14 +32,6 @@ class Note:
                 'description': note.description
             })
         return {'notes': notes_data}
-
-
-    
-    def __repr__(self):
-        tags_str = ""
-        if self.tags:
-            tags_str = ", ".join(tag.name for tag in self.tags)
-        return "Title: {}\nTags: {}\nDescription: {}".format(self.title, tags_str, self.description)
 
 class Notebook:
     def __init__(self):
@@ -58,7 +58,7 @@ class Notebook:
                 print("Название:", note.title)
                 print("Теги:")
                 for tag in note.tags:
-                    if isinstance(tag, Teg):
+                    if isinstance(tag, Tag):
                         print("- ", tag.name)
                     else:
                         print("- ", tag)
@@ -92,7 +92,7 @@ class Notebook:
         notebook = cls()
         for note_data in data['notes']:
             title = note_data['title']
-            tags = [Teg(tag_name) for tag_name in note_data['tags']]  # Создаем объекты Teg
+            tags = [Tag(tag_name) for tag_name in note_data['tags']]  # Создаем объекты Teg
             description = note_data['description']
             note = Note(title, tags, description)
             notebook.add_note(note)
@@ -110,7 +110,7 @@ class Notebook:
         return {'notes': notes_data}
     
     def default(self, obj):
-        if isinstance(obj, Teg):
+        if isinstance(obj, Tag):
             return obj.name
         raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
    
