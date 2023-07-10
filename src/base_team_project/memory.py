@@ -353,7 +353,7 @@ class Record():
             'user_phones': [phone.value for phone in self.user_phones],
             'user_birthday': str(self.user_birthday) if self.user_birthday else None,
             'user_email': self.user_email if self.user_email else None,
-            'user_email': self.user_address if self.user_address else None
+            'user_address': self.user_address if self.user_address else None
             }
 
     @classmethod
