@@ -1,4 +1,8 @@
 # to memory
+from prettytable import PrettyTable
+from termcolor import colored
+
+
 class Teg:
     def __init__(self, name):
         self.name = name
@@ -19,14 +23,15 @@ class Note:
             tags_str = ", ".join(tag.name for tag in self.tags)
         return "Title: {}\nTags: {}\nDescription: {}".format(self.title, tags_str, self.description)
 
+
 class Notebook:
     def __init__(self):
         self.notes = []
 
-    def add_note(self, note):                              
+    def add_note(self, note):
         self.notes.append(note)
-        
-    def remove_note(self, title):                          
+
+    def remove_note(self, title):
         matching_notes = []
         for note in self.notes:
             if note.title.lower() == title.lower():
@@ -34,32 +39,52 @@ class Notebook:
         for matching_note in matching_notes:
             self.notes.remove(matching_note)
 
- 
     def show_notes(self):
         if not self.notes:
             print("У нотатнику немає записів.")
         else:
             print("Нотатки в нотатнику:")
+            table = PrettyTable()
+            table.field_names = ['№', 'Title', 'Tags', 'Description']
+            counter = 1
             for note in self.notes:
-                print("Назва:", note.title)
-                print("Теги:")
-                for tag in note.tags:
-                    print("- ", tag.name)
-                print("Опис:", note.description)
-                print()
-                
+                tags = [colored('#' + tag, 'cyan', attrs=['underline'])
+                        for tag in note['tags']]
+                table.add_row(
+                    [counter, note['title'], ', '.join(tags), note['description']])
+                counter += 1
+        print(table)
+        # for note in self.notes:
+        #     print("Назва:", note.title)
+        #     print("Теги:")
+        #     for tag in note.tags:
+        #         print("- ", tag.name)
+        #     print("Опис:", note.description)
+        #     print()
+
     def search_notes_by_tag(self, tag_name):
         matching_notes = []
         for note in self.notes:
             for tag in note.tags:
                 if tag.name.lower() == tag_name.lower():
                     matching_notes.append(note)
-                    #Stop check, if tag in found in note
+                    # Stop check, if tag in found in note
                     break
-        return matching_notes
-    
+        table = PrettyTable()
+        table.field_names = ['№', 'Title', 'Tags', 'Description']
+        counter = 1
+        for note in matching_notes:
+            tags = [colored('#' + tag, 'cyan', attrs=['underline'])
+                    for tag in note['tags']]
+            table.add_row(
+                [counter, note['title'], ', '.join(tags), note['description']])
+            counter += 1
+
+        print(table)
+
     def sort_notes_by_tag(self):
-        self.notes.sort(key=lambda note: [tag.name.lower() for tag in note.tags])
+        self.notes.sort(key=lambda note: [
+                        tag.name.lower() for tag in note.tags])
 
 # notebook = Notebook()   # в мейн?
 
@@ -69,21 +94,20 @@ class Notebook:
 #     description = get_command_input("Enter note description:")
 #     tags = get_command_input("Enter note tags (comma-separated):").split(",")
 #     tag_list = []
-#     for tag in tags:     
+#     for tag in tags:
 #         tag_list.append(Teg(tag))
 #     note = Notes(title, tag_list, description)
 #     notebook.add_note(note)
 #     notebook.show_notes()
 #     return 'Note added.'
-    
-    
+
+
 # def remove_notes(*args):
 #     title = get_command_input("Enter note title to remove:")
 #     if notebook.remove_note(title):
 #         return 'Note removed.'
 #     else:
 #         return 'Note not found.'
-    
 
 
 # commands = [
