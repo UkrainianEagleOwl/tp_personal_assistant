@@ -6,7 +6,7 @@ from prompt_toolkit.completion import WordCompleter
 from colorama import Fore,Style
 from prettytable import PrettyTable
 from src.common_functions import STR_EPIC_COMMANDS
-from src.memory import Record,SetterValueIncorrect,AddressBook
+from src.memory import Record,SetterValueIncorrect,AddressBook,Phone
 from src.notes_core import *
 from src.sorter import sort_files_in_this_path
 
@@ -64,14 +64,23 @@ def greetings(*arg,a_book = AddressBook,n_book = Notebook):
 
 @input_error
 def add_new_contact(*arg,a_book = AddressBook,n_book = Notebook):
-    a_book.add_record(Record(name=arg[0].capitalize(),phone=arg[1],birthday=arg[2],email=arg[3],address=arg[4]))
+    rec = Record(name=arg[0].capitalize(),phone=arg[1],birthday=arg[2],email=arg[3],address=arg[4])
+    a_book.add_record(rec)
+    while True:
+        input_bool = get_command_input("Do you want to add more phone numbers? Write Yes or No",need_comp = False)
+        if input_bool.lower() == 'yes':
+            new_phone = get_command_input("Enter additional phone:", Phone ,need_comp = False)
+            rec.add_phone(new_phone)
+        elif input_bool.lower() == 'no':
+            break
+
     return 'Contact added.'
 
 @input_error
 def change_exist_contact(*arg,a_book = AddressBook,n_book = Notebook):
     contact = a_book.get(arg[0])
     if contact:
-        contact.change_record_indo(arg[1],arg[2])
+        contact.change_record_info(arg[1],arg[2])
         return f"Contact's phone was changed."
     else:
         return "Can't find such contact. Try again."
@@ -132,7 +141,7 @@ def sort_files(*arg,a_book = AddressBook,n_book = Notebook):#first ALWAYS addres
 
 @input_error
 def add_note(*arg,a_book = AddressBook,n_book = Notebook): 
-    tags = get_command_input("Enter note tags (comma-separated):").split(",")
+    tags = get_command_input("Enter note tags (comma-separated):",need_comp = False).split(",")
     tags = [Tag(tag.strip()) for tag in tags]
     note = Note(arg[0], tags, arg[1])
     n_book.add_note(note)

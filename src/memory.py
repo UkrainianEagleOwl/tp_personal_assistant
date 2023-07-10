@@ -417,7 +417,7 @@ class Record():
         # Method to change the phone at a specified index to a new phone
         self.user_phones[aPhoneIndex].value = aNewPhone
 
-    def change_record_indo(self,change_field,new_info):
+    def change_record_info(self,change_field,new_info):
         if change_field == 'phone':
             self.user_phones[0].value = new_info if isinstance(new_info, Phone) else self.check_argument_for_init(new_info,'phone')
         elif change_field == 'email':

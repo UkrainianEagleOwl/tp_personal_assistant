@@ -13,11 +13,17 @@ def start_work():
     init()
 
     # Load the address book from storage, or create a new one if it doesn't exist
-    address_book = load_address_book()
+    try:
+        address_book = load_address_book()
+    except:
+        pass
     if not address_book:
         address_book = AddressBook()
     # Load the notes book from storage, or create a new one if it doesn't existя
-    notes_book = load_notebook()
+    try:
+        notes_book = load_notebook()
+    except:
+        pass
     if not notes_book:
         notes_book = Notebook()
     print(STR_EPIC_ASSISTANT)
@@ -40,19 +46,18 @@ def command_exe(command = dict,adress_book = AddressBook,note_book = Notebook):
             i = 0
             while not got_args:
                 f_arg = command.get("arguments")[i]
-                match f_arg:
-                    case 'name':
-                        f_class = Name
-                    case 'phone':
-                        f_class = Phone
-                    case 'birthday':
-                        f_class = Birthday
-                    case 'email':
-                        f_class = Email
-                    case 'address':
-                        f_class = Address
-                    case _:
-                        f_class = None
+                if f_arg == 'name':
+                    f_class = Name
+                elif f_arg == 'phone':
+                    f_class = Phone
+                elif f_arg == 'birthday':
+                    f_class = Birthday
+                elif f_arg == 'email':
+                    f_class = Email
+                elif f_arg == 'address':
+                    f_class = Address
+                else:
+                    f_class = None
                 args.append(get_command_input(f'Enter {f_arg}: ',check_class = f_class,need_comp=False))  
                 if len(args) == len(command.get("arguments")):
                     got_args = True    
