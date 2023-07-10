@@ -144,12 +144,18 @@ def remove_note(*arg,a_book = AddressBook,n_book = Notebook):
     n_book.remove_note(title)
     return 'Note removed.'
 
+#add me
+def find_notes(*args, a_book=AddressBook, n_book=Notebook):
+    text = args[0]
+    n_book.search_notes_by_text(text)
+#end
+
 def ending(*arg,a_book = AddressBook,n_book = Notebook):
     return 'Goodbye!'
 
 input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
                   'get contact','show contact','show person','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands",
-                  "need help",'remove note','delete note','get note out','add note', 'new note','create note','remove contact','delete contact','take out contact']
+                  "need help",'remove note','delete note','get note out','add note', 'new note','create note','find notes', 'search notes','remove contact','delete contact','take out contact']
 # Ініціалізація автодоповнювача зі списком команд
 completer = WordCompleter(input_variants)
 
@@ -226,5 +232,12 @@ commands = [
         "input view": ['remove note','delete note','get note out'],
         "arguments": ['title'],
         "func": remove_note
+    },
+    #додав
+    {
+        "name": "find_notes",
+        "input view": ['find notes', 'search notes'],
+        "arguments": ['text'],
+        "func": find_notes
     }
     ]
