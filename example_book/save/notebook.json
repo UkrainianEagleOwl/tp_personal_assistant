@@ -1,0 +1,26 @@
+{
+    "notes": [
+        {
+            "title": "Greece",
+            "tags": [
+                "greece",
+				"history"
+            ],
+            "description": "Greece, officially the Hellenic Republic, is a country in Southeast Europe."
+        },
+        {
+            "title": "Greece-Alex",
+            "tags": [
+                "history"
+            ],
+            "description": "Following the assassination of Phillip II, his son Alexander III The Great assumed the leadership of the League of Corinth and launched an invasion of the Persian Empire with the combined forces of the League in 334 BC."
+        },
+        {
+            "title": "Rome",
+            "tags": [
+                "history"
+            ],
+            "description": "Rome is the capital city of Italy."
+        }
+			]
+}

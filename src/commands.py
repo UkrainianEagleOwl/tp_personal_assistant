@@ -106,7 +106,7 @@ def show_all(*arg, a_book=AddressBook, n_book=Notebook):
 @input_error
 def find_user(*arg,a_book = AddressBook,n_book = Notebook):
     result = a_book.find_users(arg[0])
-    return result if result else "No matches found among contacts."
+    return str(result) if result else "No matches found among contacts."
 
 def help_commands(*arg,a_book = AddressBook,n_book = Notebook):
     l_cmd = []
@@ -132,7 +132,7 @@ def sort_files(*arg,a_book = AddressBook,n_book = Notebook):#first ALWAYS addres
 
 @input_error
 def add_note(*arg,a_book = AddressBook,n_book = Notebook): 
-    tags = get_command_input("Enter note tags (comma-separated):").split(",")
+    tags = get_command_input("Enter note tags (comma-separated):",need_comp = False).split(",")
     tags = [Tag(tag.strip()) for tag in tags]
     note = Note(arg[0], tags, arg[1])
     n_book.add_note(note)
