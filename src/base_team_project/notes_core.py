@@ -1,9 +1,10 @@
-# to memory
+import json
+
+
 class Teg:
     def __init__(self, name):
         self.name = name
-
-
+   
 class Note:
     def __init__(self, title, tags, description):
         self.title = title
@@ -12,7 +13,20 @@ class Note:
         else:
             self.tags = []
         self.description = description
+    
+    def to_dict(self):
+        notes_data = []
+        for note in self.notes:
+            tags_data = [tag.name for tag in note.tags]  # Сохраняем только имена тегов
+            notes_data.append({
+                'title': note.title,
+                'tags': tags_data,  # Используем сохраненные имена тегов
+                'description': note.description
+            })
+        return {'notes': notes_data}
 
+
+    
     def __repr__(self):
         tags_str = ""
         if self.tags:
@@ -37,16 +51,20 @@ class Notebook:
  
     def show_notes(self):
         if not self.notes:
-            print("У нотатнику немає записів.")
+            print("У нотатника нет записей.")
         else:
-            print("Нотатки в нотатнику:")
+            print("Заметки в нотатнике:")
             for note in self.notes:
-                print("Назва:", note.title)
+                print("Название:", note.title)
                 print("Теги:")
                 for tag in note.tags:
-                    print("- ", tag.name)
-                print("Опис:", note.description)
+                    if isinstance(tag, Teg):
+                        print("- ", tag.name)
+                    else:
+                        print("- ", tag)
+                print("Описание:", note.description)
                 print()
+
                 
     def search_notes_by_tag(self, tag_name):
         matching_notes = []
@@ -61,42 +79,43 @@ class Notebook:
     def sort_notes_by_tag(self):
         self.notes.sort(key=lambda note: [tag.name.lower() for tag in note.tags])
 
-# notebook = Notebook()   # в мейн?
 
-# to commands
-# def add_notes(*arg):
-#     title = get_command_input("Enter note title:")
-#     description = get_command_input("Enter note description:")
-#     tags = get_command_input("Enter note tags (comma-separated):").split(",")
-#     tag_list = []
-#     for tag in tags:     
-#         tag_list.append(Teg(tag))
-#     note = Notes(title, tag_list, description)
-#     notebook.add_note(note)
-#     notebook.show_notes()
-#     return 'Note added.'
+    # добавляем методы сохр/загрузки json и методы преобразования в словарь 
+    def save_json(self, filename):
+        with open(filename, 'w') as file:
+            json.dump(self.to_dict(), file, indent=4)
+
+    @classmethod
+    def load_json(cls, filename):
+        with open(filename, 'r') as file:
+            data = json.load(file)
+        notebook = cls()
+        for note_data in data['notes']:
+            title = note_data['title']
+            tags = [Teg(tag_name) for tag_name in note_data['tags']]  # Создаем объекты Teg
+            description = note_data['description']
+            note = Note(title, tags, description)
+            notebook.add_note(note)
+        return notebook
+
+    def to_dict(self):
+        notes_data = []
+        for note in self.notes:
+            tags_data = [tag.name for tag in note.tags]  # Сохраняем только имена тегов
+            notes_data.append({
+                'title': note.title,
+                'tags': tags_data,  # Используем сохраненные имена тегов
+                'description': note.description
+            })
+        return {'notes': notes_data}
     
-    
-# def remove_notes(*args):
-#     title = get_command_input("Enter note title to remove:")
-#     if notebook.remove_note(title):
-#         return 'Note removed.'
-#     else:
-#         return 'Note not found.'
-    
+    def default(self, obj):
+        if isinstance(obj, Teg):
+            return obj.name
+        raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
+   
+
+   
 
 
-# commands = [
-#   {
-#         "name": "add_notes",
-#         "inpute view": ['add notes'],
-#         "arguments": ['title, description'],
-#         "func": add_notes
-#     },
-#     {
-#         "name": "remove_notes",
-#         "inpute view": ['remove notes'],
-#         "arguments": ['title'],
-#         "func": remove_notes
-#     }
-# ]
+
