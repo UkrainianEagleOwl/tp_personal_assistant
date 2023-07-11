@@ -35,6 +35,14 @@ class Note:
                 'description': note.description
             })
         return {'notes': notes_data}
+    
+    def change_note_info(self,change_field, new_info):
+        if change_field == 'tag':
+            self.tags == new_info if isinstance(new_info, Tag) else Tag(new_info)
+        elif change_field == 'title':
+            self.title = new_info
+        elif change_field == "description":
+            self.description = new_info
 
 
 class Notebook:

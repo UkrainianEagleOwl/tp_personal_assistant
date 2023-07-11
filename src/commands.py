@@ -159,12 +159,44 @@ def find_notes(*args, a_book=AddressBook, n_book=Notebook):
     n_book.search_notes_by_text(text)
 #end
 
+@input_error
+def edit_note_info(*arg, a_book=AddressBook, n_book=Notebook):
+    note_title = arg[0]
+    new_title = arg[1]
+    new_tags = [Tag(tag.strip()) for tag in arg[2].split(",")]
+    new_description = arg[3]
+
+    matching_notes = n_book.search_notes_by_tag(note_title)
+    if matching_notes:
+        note_to_edit = matching_notes[0]
+        note_to_edit.change_note_info('title', new_title)
+        note_to_edit.change_note_info('tag', new_tags)
+        note_to_edit.change_note_info('description', new_description)
+        return "Note information updated."
+    else:
+        return "Note not found."
+
+
+@input_error
+def search_notes_by_tag(*arg, a_book=AddressBook, n_book=Notebook):
+    tag_name = arg[0]
+    matching_notes = n_book.search_notes_by_tag(tag_name)
+    if matching_notes:
+        return [str(note) for note in matching_notes]
+    else:
+        return "No notes found for the given tag."
+
+@input_error
+def sort_notes_by_tag(*arg, a_book=AddressBook,n_book=Notebook):
+    n_book.sort_notes_by_tag()
+    return "Notes sorted by tags."
+
 def ending(*arg,a_book = AddressBook,n_book = Notebook):
     return 'Goodbye!'
 
 input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
                   'get contact','show contact','show person','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands",
-                  "need help",'remove note','delete note','get note out','add note', 'new note','create note','find notes', 'search notes','remove contact','delete contact','take out contact']
+                  "need help",'remove note','delete note','get note out','add note', 'new note','create note','find notes', 'search notes','remove contact','delete contact','take out contact',"edit note", "change note", "search by tag","sort by tag"]
 # Ініціалізація автодоповнювача зі списком команд
 completer = WordCompleter(input_variants)
 
@@ -248,5 +280,26 @@ commands = [
         "input view": ['find notes', 'search notes'],
         "arguments": ['text'],
         "func": find_notes
+    },
+    
+    {
+        "name": "edit note info",
+        "input view": ["edit note", "change note"],
+        "arguments": ["note title", "new title", "new tags", "new description"],
+        "func": edit_note_info
+    },
+    
+    {
+        "name": "search notes by tag",
+        "input view": ["search by tag"],
+        "arguments": ["tag name"],
+        "func": search_notes_by_tag
+    },
+    
+    {
+        "name": "sort notes by tag",
+        "input view": ["sort by tag"],
+        "arguments": [],
+        "func": sort_notes_by_tag
     }
     ]
