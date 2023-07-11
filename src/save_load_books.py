@@ -68,7 +68,7 @@ def load_notebook(filename = 'notebook.json'):
     # Проверяем существование файла
     file_path = os.path.join(SAVE_DIR, filename)
     if not os.path.exists(file_path):
-        print(f"Файл {file_path} не существует.")
+        # print(f"Файл {file_path} не существует.")
         return None
 
     # Загружаем данные из JSON-файла
@@ -82,5 +82,5 @@ def load_notebook(filename = 'notebook.json'):
             note_data['description']
         )
         notebook.add_note(note)
-    print(f"Notebook загружен из файла: {file_path}")
+    # print(f"Notebook загружен из файла: {file_path}")
     return notebook
