@@ -88,6 +88,19 @@ class Notebook:
             counter += 1
         print(table)
 
+    def search_notes_by_text(self, text):
+        matching_notes = []
+        for note in self.notes:
+            if text.lower() in note.title.lower() or text.lower() in note.description.lower():
+                matching_notes.append(note)
+        table = PrettyTable()
+        table.field_names = ['№', 'Title', 'Tags', 'Description']
+        for i, note in enumerate(matching_notes, 1):
+            tags = [Fore.CYAN + '#' + tag.name +
+                    Style.RESET_ALL for tag in note.tags]
+            table.add_row([i, note.title, ', '.join(tags), note.description])
+        print(table)
+
     def sort_notes_by_tag(self):
         self.notes.sort(key=lambda note: [
                         tag.name.lower() for tag in note.tags])

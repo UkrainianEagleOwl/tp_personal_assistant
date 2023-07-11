@@ -7,8 +7,8 @@ tp_personal_assistant/
         memory.py
         notes_core.py
         save_load_book.py
+        save_load_notebook.py
         sorter.py
-        example_book/      
     setup.py
     MANIFEST.in
     CODE_OF_CONDUCT.md
