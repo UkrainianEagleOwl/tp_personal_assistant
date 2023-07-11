@@ -67,7 +67,7 @@ def add_new_contact(*arg,a_book = AddressBook,n_book = Notebook):
     rec = Record(name=arg[0].capitalize(),phone=arg[1],birthday=arg[2],email=arg[3],address=arg[4])
     a_book.add_record(rec)
     while True:
-        input_bool = get_command_input("Do you want to add more phone numbers? Write Yes or No",need_comp = False)
+        input_bool = get_command_input("Do you want to add more phone numbers? Write Yes or No: ",need_comp = False)
         if input_bool.lower() == 'yes':
             new_phone = get_command_input("Enter additional phone:", Phone ,need_comp = False)
             rec.add_phone(new_phone)
@@ -153,11 +153,11 @@ def remove_note(*arg,a_book = AddressBook,n_book = Notebook):
     n_book.remove_note(title)
     return 'Note removed.'
 
-#add me
+@input_error
 def find_notes(*args, a_book=AddressBook, n_book=Notebook):
     text = args[0]
     n_book.search_notes_by_text(text)
-#end
+
 
 def ending(*arg,a_book = AddressBook,n_book = Notebook):
     return 'Goodbye!'

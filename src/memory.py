@@ -60,13 +60,14 @@ class AddressBook(UserDict):
             table.add_row([user_info['day'], user_info['user_name'],
                            user_info['user_phones'], user_info['user_birthday']])
         print(table)
+        return table
 
     def add_record(self, aRecord):
         # Method to add a record to the address book
         self.data[aRecord.user_name.value] = aRecord
 
     def remove_record(self, name):
-        # Method to add a record to the address book
+        # Method to remove a record from the address book
         self.data.pop(name)
 
     def find_in_values(self, aRecord):
@@ -82,6 +83,10 @@ class AddressBook(UserDict):
         matching_users = []
         for record in self.data.values():
             if record.user_name.value.find(search_string) != -1:
+                matching_users.append(record)
+            elif record.user_email.value.find(search_string) != -1:
+                matching_users.append(record)
+            elif record.user_address.value.find(search_string) != -1:
                 matching_users.append(record)
             else:
                 for phone in record.user_phones:
@@ -129,8 +134,8 @@ class AddressBook(UserDict):
         with open(filename, "w", newline="") as file:
             writer = csv.writer(file)
             for record in self.data.values():
-                phones = [phone.value for phone in record.phones]
-                writer.writerow([record.name.value, *phones])
+                phones = [phone.value for phone in record.user_phones]
+                writer.writerow([record.user_name.value, *phones])
 
     @classmethod
     def load_from_csv(cls, filename):
@@ -434,5 +439,5 @@ class Record():
 
         current_datetime = datetime.now()
         this_year_birthday = datetime(
-            year=current_datetime.year, month=self.user_birthday.month, day=self.user_birthday.day)
+            year=current_datetime.year, month=self.user_birthday.value.month, day=self.user_birthday.value.day)
         return (this_year_birthday - current_datetime).days
