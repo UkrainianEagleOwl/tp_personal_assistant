@@ -15,11 +15,17 @@ def start_work():
     init()
 
     # Load the address book from storage, or create a new one if it doesn't exist
-    address_book = load_address_book()
+    try:
+        address_book = load_address_book()
+    except:
+        pass
     if not address_book:
         address_book = AddressBook()
     # Load the notes book from storage, or create a new one if it doesn't existя
-    notes_book = load_notebook()
+    try:
+        notes_book = load_notebook()
+    except:
+        pass
     if not notes_book:
         notes_book = Notebook()
     print(STR_EPIC_ASSISTANT)
@@ -37,7 +43,6 @@ def command_exe(command=dict, adress_book=AddressBook, note_book=Notebook):
             mes += 'If you want to skip unimportant argument (email,address or birthday) write pass.'
         elif command.get('name') == 'change exist contact':
             mes += 'For second argument "changed field" write: "phone","email","birthday" or "address"'
-
         print(mes)
         got_args = False
         i = 0
