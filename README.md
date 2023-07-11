@@ -76,7 +76,7 @@ To get started with Jarvis, follow these steps:
 Please feel free to reach out to any of the following team members if you have any questions, suggestions, or would like to contribute to this project:
 
 - Dmytro Filin - GitHub: [dmytrofilin](https://github.com/UkrainianEagleOwl) LinkedIn: [Dmytro Filin](https://www.linkedin.com/in/dmytro-filin-18716b198/) 
-- Illya Grygoriev - GitHub: [illyagrygoriev](https://github.com/Adentas)
+- Illya Hryhoriev - GitHub: [illyagrygoriev](https://github.com/Adentas)
 - Dmytro Klymenko - GitHub: [dmytroklymenko](https://github.com/leegosx)
 - Dmytro Paukov - GitHub: [dmytropaukov](https://github.com/paukdv)
 - Alexandr - GitHub: [alexandr](https://github.com/sanyashahter)
