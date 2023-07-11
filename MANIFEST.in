@@ -9,10 +9,6 @@ tp_personal_assistant/
         save_load_book.py
         save_load_notebook.py
         sorter.py
-    example_book/
-        save/
-            notebook.json
-            phonebook.json   
     setup.py
     MANIFEST.in
     CODE_OF_CONDUCT.md
