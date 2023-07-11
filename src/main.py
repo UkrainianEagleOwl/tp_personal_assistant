@@ -14,6 +14,7 @@ def start_work():
     init()
 
     # Load the address book from storage, or create a new one if it doesn't exist
+    address_book = None
     try:
         address_book = load_addressbook()
     except:
@@ -21,6 +22,7 @@ def start_work():
     if not address_book:
         address_book = AddressBook()
     # Load the notes book from storage, or create a new one if it doesn't existя
+    notes_book = None
     try:
         notes_book = load_notebook()
     except:
