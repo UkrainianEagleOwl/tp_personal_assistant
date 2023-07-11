@@ -1,0 +1,22 @@
+[project]
+name = "jarvis_assistant_bot"
+version = "0.4"
+authors = [
+  { name="Dmytro Filin", github="https://github.com/UkrainianEagleOwl" },
+  { name="Illya Grygoriev", github="https://github.com/Adentas" },
+  { name="Dmytro Klymenko", github="https://github.com/leegosx" },
+  { name="Dmytro Paukov", github="https://github.com/paukdv" },
+  { name="Alexandr ", github="https://github.com/sanyashahter" }
+]
+description = "Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently. With Jarvis, you can easily handle your daily tasks and keep your information in one place."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/UkrainianEagleOwl/tp_personal_assistant"
+"Bug Tracker" = "https://github.com/UkrainianEagleOwl/tp_personal_assistant/issues"
