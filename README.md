@@ -1,8 +1,10 @@
-# Personal Assistant - Address Book
+Sure! Here's the updated README with the additional information you provided:
+
+# Personal Assistant - Address Book (Jarvis)
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A simple personal assistant application that allows you to manage your address book with contacts. The application provides features to add, remove, change, save, and load contacts, making it easier to organize your personal or professional network.
+Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently. With Jarvis, you can easily handle your daily tasks and keep your information in one place.
 
 ## Table of Contents
 
@@ -11,27 +13,33 @@ A simple personal assistant application that allows you to manage your address b
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
+- [Contacts](#contacts)
 - [License](#license)
 
 ## Features
 
-- Add contacts with information such as name, phone number, email, and address.
-- Remove contacts from the address book.
-- Change/update contact information.
-- Save the address book to a file for future use.
-- Load a previously saved address book.
+Jarvis offers the following features:
+
+- **Contact Book**: You can save and manage your contacts with names, addresses, phone numbers, email addresses, and birthdays. Jarvis securely stores this information, allowing you to easily access and update it whenever needed. It can also remind you of upcoming birthdays from your contact book.
+
+- **Notebook**: Jarvis provides a notebook feature where you can create and store text-based notes. These notes can contain important information, ideas, or anything you want to remember. You can search for specific notes using keywords or tags. Jarvis allows you to edit and delete notes, ensuring your information remains organized.
+
+- **File Sorting**: If you have files in a specified folder, Jarvis can help you sort them by categories such as images, documents, videos, and more. This feature ensures that your files are organized and easily accessible.
 
 ## Getting Started
 
-To get a local copy up and running, follow these simple steps.
+To get started with Jarvis, follow these steps:
 
 ### Prerequisites
 
 - Python 3.x
 - Git
+- colorama 
+- prompt_toolkit
+- prettytable
+  
 
-### Installation
+### Installation by clone from github
 
 1. Clone the repository.
    ```sh
@@ -43,14 +51,19 @@ To get a local copy up and running, follow these simple steps.
    cd tp_personal_assistant
    ```
 
+3. Install the required dependencies.
+   ```sh
+   pip install -e.
+   ```
+
 ## Usage
 
 1. Run the application.
    ```sh
-   python main.py
+   jarvis
    ```
 
-2. Follow the on-screen instructions to perform various actions such as adding, removing, changing, saving, or loading contacts.
+2. Follow the on-screen instructions to access and use Jarvis's various features, such as managing contacts, creating notes, and sorting files.
 
 ## Contacts
 
