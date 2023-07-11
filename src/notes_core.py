@@ -1,11 +1,25 @@
 import json
 from prettytable import PrettyTable
 from colorama import init, Fore, Style
+from src.memory import SetterValueIncorrect
 
 
 class Tag:
     def __init__(self, name):
-        self.name = name
+        self._name = name
+
+    @property
+    def name(self):
+        # Getter method for the value property
+        return self._name
+
+    @name.setter
+    def name(self, new_name):
+        # Setter method for the value property
+        if isinstance(new_name, str):
+            self._name = new_name
+        else:
+            raise SetterValueIncorrect('Only string accepted')
 
 
 class Note:
@@ -35,6 +49,17 @@ class Note:
                 'description': note.description
             })
         return {'notes': notes_data}
+    
+    def change_note_info(self,change_field, new_info):
+        if change_field == 'tag':
+            self.tags == new_info if isinstance(new_info, Tag) else Tag(new_info)
+        elif change_field == 'title':
+            self.title = new_info
+        elif change_field == "description":
+            self.description = new_info
+
+    def add_tag(self,tag):
+        self.tags.append(Tag(tag) if isinstance(tag, str) else tag)
 
 
 class Notebook:
@@ -54,19 +79,21 @@ class Notebook:
 
     def show_notes(self):
         if not self.notes:
-            print("У нотатника нет записей.")
+            return "Notebook is empty."
         else:
-            print("Заметки в нотатнике:")
-            table = PrettyTable()
-            table.field_names = ['№', 'Title', 'Tags', 'Description']
-            counter = 1
-            for note in self.notes:
-                tags = [Fore.CYAN + '#' + tag +
-                        Style.RESET_ALL for tag in note['tags']]
-                table.add_row([counter, note['title'],
-                              ', '.join(tags), note['description']])
-                counter += 1
-        print(table)
+            return self.put_notes_in_stringlist(self.notes)
+    
+    @staticmethod
+    def put_notes_in_stringlist(notes):
+        table = []
+        i = 1
+        for note in notes:
+            table.append(f'Note №{i}')
+            table.append("Title :" + Fore.YELLOW +  f"{note.title}" + Style.RESET_ALL)
+            table.append("Tags :" + ','.join([(Fore.CYAN + '#' + tag.name + Style.RESET_ALL) for tag in note.tags]))
+            table.append("Description:" + note.description + '\n')
+            i +=1
+        return table
 
     def search_notes_by_tag(self, tag_name):
         matching_notes = []
@@ -76,29 +103,19 @@ class Notebook:
                     matching_notes.append(note)
                     # Stop check, if tag in found in note
                     break
-        table = PrettyTable()
-        table.field_names = ['№', 'Title', 'Tags', 'Description']
-        counter = 1
-        for note in matching_notes:
-            tags = [Fore.CYAN + '#' + tag +
-                    Style.RESET_ALL for tag in note['tags']]
-            table.add_row([counter, note['title'],
-                           ', '.join(tags), note['description']])
-            counter += 1
-        print(table)
+        return self.put_notes_in_stringlist(matching_notes)
+
+    def search_notes_by_title(self,title):
+        for note in self.notes:
+            if title.lower() == note.title.lower():
+                return note
 
     def search_notes_by_text(self, text):
         matching_notes = []
         for note in self.notes:
             if text.lower() in note.title.lower() or text.lower() in note.description.lower():
                 matching_notes.append(note)
-        table = PrettyTable()
-        table.field_names = ['№', 'Title', 'Tags', 'Description']
-        for i, note in enumerate(matching_notes, 1):
-            tags = [Fore.CYAN + '#' + tag.name +
-                    Style.RESET_ALL for tag in note.tags]
-            table.add_row([i, note.title, ', '.join(tags), note.description])
-        print(table)
+        return self.put_notes_in_stringlist(matching_notes)
 
     def sort_notes_by_tag(self):
         self.notes.sort(key=lambda note: [
