@@ -11,12 +11,11 @@ class Tag:
 class Note:
     def __init__(self, title, tags, description):
         self.title = title
+        self.tags = []
         if isinstance(tags, list):
-            self.tags = [Tag(t) if isinstance(tags, str) else t for t in tags]
-        elif tags is None:
-            self.tags = []
-        else:
-            self.tags = Tag(tags) if isinstance(tags, str) else tags
+            self.tags = [Tag(t) if isinstance(t, str) else t for t in tags]
+        elif tags != None:
+            self.tags.append(Tag(tags) if isinstance(tags, str) else tags)
         self.description = description
 
     def __repr__(self):
