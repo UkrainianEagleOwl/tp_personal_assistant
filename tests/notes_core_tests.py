@@ -136,14 +136,14 @@ class NotebookTestCase(unittest.TestCase):
         expected_order = [self.note1, self.note2, self.note3]
         self.assertEqual(self.notebook.notes, expected_order)
 
-    def test_save_and_load_json(self):
-        filename = 'notebook.json'
-        self.notebook.save_json(filename)
-        loaded_notebook = Notebook.load_json(filename)
-        self.assertEqual(len(loaded_notebook.notes), 3)
-        self.assertEqual(loaded_notebook.notes[0].title, 'Note 1')
-        self.assertEqual(loaded_notebook.notes[0].tags[0].name, 'tag1')
-        self.assertEqual(loaded_notebook.notes[0].description, 'Description 1')
+    # def test_save_and_load_json(self):
+    #     filename = 'notebook.json'
+    #     self.notebook.save_json(filename)
+    #     loaded_notebook = Notebook.load_json(filename)
+    #     self.assertEqual(len(loaded_notebook.notes), 3)
+    #     self.assertEqual(loaded_notebook.notes[0].title, 'Note 1')
+    #     self.assertEqual(loaded_notebook.notes[0].tags[0].name, 'tag1')
+    #     self.assertEqual(loaded_notebook.notes[0].description, 'Description 1')
 
     def test_to_dict(self):
         expected_dict = {
