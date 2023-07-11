@@ -55,6 +55,12 @@ To get started with Jarvis, follow these steps:
    ```sh
    pip install -e.
    ```
+### Installation by clone from github
+
+1. Load from pip.
+   ```sh
+    pip install jarvis-assistant-bot
+   ```
 
 ## Usage
 
