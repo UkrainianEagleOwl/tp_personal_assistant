@@ -4,7 +4,7 @@ from src.commands import find_closest_command, get_command_input
 from src.save_load_books import *
 # AddressBook,SetterValueIncorrect,Name,Phone,Birthday,Address,Email
 from src.memory import *
-from src.notes_core import Notebook
+from src.notes_core import Notebook,Tag
 from src.common_functions import STR_EPIC_ASSISTANT
 from colorama import init
 
@@ -32,6 +32,7 @@ def start_work():
     return (address_book, notes_book)
 
 
+
 def command_exe(command=dict, adress_book=AddressBook, note_book=Notebook):
     cmd_func = command.get('func')
     if len(command.get('arguments')) > 0:
@@ -42,6 +43,8 @@ def command_exe(command=dict, adress_book=AddressBook, note_book=Notebook):
             mes += 'If you want to skip unimportant argument (email,address or birthday) write pass.'
         elif command.get('name') == 'change exist contact':
             mes += 'For second argument "changed field" write: "phone","email","birthday" or "address"'
+        elif command.get('name') == 'edit note info':
+            mes += 'For second argument "changed field" write: "title","tag" or "description"'
         print(mes)
         got_args = False
         i = 0
@@ -57,10 +60,12 @@ def command_exe(command=dict, adress_book=AddressBook, note_book=Notebook):
                 f_class = Email
             elif f_arg == 'address':
                 f_class = Address
+            elif f_arg == 'tag':
+                f_class = Tag
             else:
                 f_class = None
             args.append(get_command_input(
-                f'Enter {f_arg}: ', check_class=f_class, need_comp=False))
+                f'Enter {f_arg}: ', check_class=f_class, need_comp=False,check_add_command=command, arg_number = i))
             if len(args) == len(command.get("arguments")):
                 got_args = True
             else:

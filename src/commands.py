@@ -10,8 +10,10 @@ from src.memory import Record,SetterValueIncorrect,AddressBook,Phone
 from src.notes_core import *
 from src.sorter import sort_files_in_this_path
 
+CHECK_SECOND_ARG_CHANGE_CONTACT = ("phone","email","birthday","address")
+CHECK_SECOND_ARG_CHANGE_NOTE = ("title","tag","description")
 
-def get_command_input(Input_message='',check_class = None,need_comp = True):
+def get_command_input(Input_message='',check_class = None,need_comp = True, check_add_command = None, arg_number = None):
     Input_value = None
     while True:
         if need_comp:
@@ -27,12 +29,26 @@ def get_command_input(Input_message='',check_class = None,need_comp = True):
                 print(e.message)
             else:
                 break
+        elif check_add_command and (arg_number == 1):
+            if check_add_command["name"] == "change exist contact":
+                if Input_value in CHECK_SECOND_ARG_CHANGE_CONTACT:
+                    break
+                else:
+                    print(f'You can write only {CHECK_SECOND_ARG_CHANGE_CONTACT}')
+            elif check_add_command["name"] == 'edit note info':
+                if Input_value in CHECK_SECOND_ARG_CHANGE_NOTE:
+                    break
+                else:
+                    print(f'You can write only {CHECK_SECOND_ARG_CHANGE_NOTE}')
+            elif Input_value:
+                break
         elif Input_value:
             break
     return Input_value
 
 #Функція find_closest_command(user_input) знаходить найближчу команду до введеної користувачем, за допомогою алгоритму Левенштейну.
 def find_closest_command(user_input):
+    cmd = None
     closest_command = difflib.get_close_matches(user_input, input_variants, n=1)
     if closest_command:
         closest_command = closest_command[0]
@@ -67,9 +83,9 @@ def add_new_contact(*arg,a_book = AddressBook,n_book = Notebook):
     rec = Record(name=arg[0].capitalize(),phone=arg[1],birthday=arg[2],email=arg[3],address=arg[4])
     a_book.add_record(rec)
     while True:
-        input_bool = get_command_input("Do you want to add more phone numbers? Write Yes or No",need_comp = False)
+        input_bool = get_command_input("Do you want to add more phone numbers? Write Yes or No: ",need_comp = False)
         if input_bool.lower() == 'yes':
-            new_phone = get_command_input("Enter additional phone:", Phone ,need_comp = False)
+            new_phone = get_command_input("Enter additional phone: ", Phone ,need_comp = False)
             rec.add_phone(new_phone)
         elif input_bool.lower() == 'no':
             break
@@ -114,18 +130,19 @@ def show_all(*arg, a_book=AddressBook, n_book=Notebook):
 
 @input_error
 def find_user(*arg,a_book = AddressBook,n_book = Notebook):
-    result = a_book.find_users(arg[0])
-    return str(result) if result else "No matches found among contacts."
+    results = a_book.find_users(arg[0])
+    string_list = [str(result) for result in results] if results else "No matches found among contacts."
+    return string_list
 
 def help_commands(*arg,a_book = AddressBook,n_book = Notebook):
     l_cmd = []
     l_cmd.append(STR_EPIC_COMMANDS)
     for cmd in commands:
-        s = "Command:" + Fore.YELLOW + f"{cmd.get('name')}" + Style.RESET_ALL
-        s2 = "For calling write" + Fore.GREEN + f":{cmd['input view'][0]}"+ Style.RESET_ALL + ',' + Fore.GREEN + f" {cmd['input view'][1]}" + Style.RESET_ALL + " or " + Fore.GREEN + f"{cmd['input view'][2]}" + Style.RESET_ALL
-        s = '|{:<40}|{:<110}|'.format(s, s2)
+        s = "Command: " + Fore.YELLOW + f"{cmd.get('name')}" + Style.RESET_ALL
+        s2 = "Write: " + Fore.GREEN + f"{cmd['input view'][0]}"+ Style.RESET_ALL + ',' + Fore.GREEN + f" {cmd['input view'][1]}" + Style.RESET_ALL + " or " + Fore.GREEN + f"{cmd['input view'][2]}" + Style.RESET_ALL
+        s = '|{:<40}|{:<95}|'.format(s, s2)
         if len(cmd["arguments"]) > 0:
-            s3 = "Need arguments:" + Fore.BLUE + f"{cmd['arguments']}" + Style.RESET_ALL
+            s3 = "Arguments: " + Fore.BLUE + f"{cmd['arguments']}" + Style.RESET_ALL
             s3 = '{:<50}'.format(s3)
             s += s3
         l_cmd.append(s)
@@ -145,7 +162,7 @@ def add_note(*arg,a_book = AddressBook,n_book = Notebook):
     tags = [Tag(tag.strip()) for tag in tags]
     note = Note(arg[0], tags, arg[1])
     n_book.add_note(note)
-    return 'Note added. \n' + str(note)
+    return 'Note added. \n'# + str(note)
 
 @input_error
 def remove_note(*arg,a_book = AddressBook,n_book = Notebook):
@@ -153,25 +170,24 @@ def remove_note(*arg,a_book = AddressBook,n_book = Notebook):
     n_book.remove_note(title)
     return 'Note removed.'
 
-#add me
+@input_error
 def find_notes(*args, a_book=AddressBook, n_book=Notebook):
     text = args[0]
-    n_book.search_notes_by_text(text)
-#end
+    return n_book.search_notes_by_text(text)
 
 @input_error
 def edit_note_info(*arg, a_book=AddressBook, n_book=Notebook):
-    note_title = arg[0]
-    new_title = arg[1]
-    new_tags = [Tag(tag.strip()) for tag in arg[2].split(",")]
-    new_description = arg[3]
-
-    matching_notes = n_book.search_notes_by_tag(note_title)
-    if matching_notes:
-        note_to_edit = matching_notes[0]
-        note_to_edit.change_note_info('title', new_title)
-        note_to_edit.change_note_info('tag', new_tags)
-        note_to_edit.change_note_info('description', new_description)
+    note = n_book.search_notes_by_title(arg[0])
+    if note:
+        note.change_note_info(arg[1],arg[2])
+        if arg[1] == 'tag':
+            while True:
+                input_bool = get_command_input("Do you want to add more tags? Write Yes or No: ",need_comp = False)
+                if input_bool.lower() == 'yes':
+                    new_tag = get_command_input("Enter tag:", Tag ,need_comp = False)
+                    note.add_tag(new_tag)
+                elif input_bool.lower() == 'no':
+                    break
         return "Note information updated."
     else:
         return "Note not found."
@@ -191,12 +207,18 @@ def sort_notes_by_tag(*arg, a_book=AddressBook,n_book=Notebook):
     n_book.sort_notes_by_tag()
     return "Notes sorted by tags."
 
+def show_all_notes(*arg, a_book=AddressBook,n_book=Notebook):
+    table = n_book.show_notes()
+    return table
+
 def ending(*arg,a_book = AddressBook,n_book = Notebook):
     return 'Goodbye!'
 
 input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
-                  'get contact','show contact','show person','show all contacts','show book','show all','goodbye','close','end','search','find','find user', "help","commands",
-                  "need help",'remove note','delete note','get note out','add note', 'new note','create note','find notes', 'search notes','remove contact','delete contact','take out contact',"edit note", "change note", "search by tag","sort by tag"]
+                  'get contact','show contact','show person','show contacts','show address book','show all book','goodbye','close','end','search user','find contact','find user', "help","commands",
+                  "need help",'remove note','delete note','get note out','add note', 'new note','create note','find notes', 'search notes','remove contact','delete contact','take out contact'
+                  ,"edit note", "change note", "search by tag","sort by tag",'show all notes','show notebook','show notes','give me note',"find by tag","give me note by tag"
+                  ,"tag sorting","notebook sort by tag","remake note"]
 # Ініціалізація автодоповнювача зі списком команд
 completer = WordCompleter(input_variants)
 
@@ -234,13 +256,13 @@ commands = [
     },
     {
         "name": "show all",
-        "input view":  ['show all contacts','show book','show all'],
+        "input view":  ['show contacts','show address book','show all book'],
         "arguments": [],
         "func":show_all
     },
     {
         "name": "find user",
-        "input view":  ['search','find','find user'],
+        "input view":  ['search user','find contact','find user'],
         "arguments": ['text_for_search'],
         "func":find_user
     },
@@ -257,12 +279,6 @@ commands = [
         "func":sort_files
     },
     {
-        "name": "ending",
-        "input view": ['goodbye','close','end'],
-        "arguments": [],
-        "func":ending
-    },
-    {
         "name": "add_note",
         "input view": ['add note', 'new note','create note'],
         "arguments": ['title', 'description'],
@@ -274,32 +290,40 @@ commands = [
         "arguments": ['title'],
         "func": remove_note
     },
-    #додав
     {
         "name": "find_notes",
-        "input view": ['find notes', 'search notes'],
+        "input view": ['find notes', 'search notes','give me note'],
         "arguments": ['text'],
         "func": find_notes
-    },
-    
+    },  
     {
         "name": "edit note info",
-        "input view": ["edit note", "change note"],
-        "arguments": ["note title", "new title", "new tags", "new description"],
+        "input view": ["edit note", "change note","remake note"],
+        "arguments": ["title", "changed field", "new info"],
         "func": edit_note_info
-    },
-    
+    },   
     {
         "name": "search notes by tag",
-        "input view": ["search by tag"],
+        "input view": ["search by tag","find by tag","give me note by tag"],
         "arguments": ["tag name"],
         "func": search_notes_by_tag
-    },
-    
+    },   
     {
         "name": "sort notes by tag",
-        "input view": ["sort by tag"],
+        "input view": ["sort by tag","tag sorting","notebook sort by tag"],
         "arguments": [],
         "func": sort_notes_by_tag
+    },
+    {
+        "name": "show all notes",
+        "input view":  ['show all notes','show notebook','show notes'],
+        "arguments": [],
+        "func":show_all_notes
+    },
+    {
+        "name": "ending",
+        "input view": ['goodbye','close','end'],
+        "arguments": [],
+        "func":ending
     }
     ]

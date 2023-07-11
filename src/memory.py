@@ -83,6 +83,17 @@ class AddressBook(UserDict):
         for record in self.data.values():
             if record.user_name.value.find(search_string) != -1:
                 matching_users.append(record)
+            elif record.user_email.value:
+                if record.user_email.value.find(search_string) != -1:
+                    matching_users.append(record)
+                elif record.user_address.value:
+                    if record.user_address.value.find(search_string) != -1:
+                        matching_users.append(record)
+                    else:
+                        for phone in record.user_phones:
+                            if phone.value.find(search_string) != -1:
+                                matching_users.append(record)
+                                break
             else:
                 for phone in record.user_phones:
                     if phone.value.find(search_string) != -1:
@@ -364,15 +375,12 @@ class Record():
         table.field_names = ['Name', 'Phones', 'Birthday', 'Email', 'Address']
         phone_numbers = ', '.join(str(phone) for phone in self.user_phones)
         table.add_row([
-            str(self.user_name),
+            self.user_name,
             phone_numbers,
-            str(self.user_birthday) if self.user_birthday else '',
-            str(self.user_email) if self.user_email else '',
-            str(self.user_address) if self.user_address else ''
+            self.user_birthday,
+            self.user_email,
+            self.user_address
         ])
-        table.align = 'c'
-        table.padding_width = 1
-        table.max_width = 0
         return str(table)
     
     def to_dict(self):
