@@ -360,10 +360,20 @@ class Record():
         return False
 
     def __str__(self):
-        phone_numbers = ' | '.join(str(phone) for phone in self.user_phones)
-        return '|{:^10}|\n|{:^20}| {:^10}| {:^10}|{:^10}|\n'.format(str(self.user_name), phone_numbers, 
-                                                                    str(self.user_birthday) if self.user_birthday else '',str(self.user_email) if self.user_email else '',
-                                                                    str(self.user_address) if self.user_address else '')
+        table = PrettyTable()
+        table.field_names = ['Name', 'Phones', 'Birthday', 'Email', 'Address']
+        phone_numbers = ', '.join(str(phone) for phone in self.user_phones)
+        table.add_row([
+            str(self.user_name),
+            phone_numbers,
+            str(self.user_birthday) if self.user_birthday else '',
+            str(self.user_email) if self.user_email else '',
+            str(self.user_address) if self.user_address else ''
+        ])
+        table.align = 'c'
+        table.padding_width = 1
+        table.max_width = 0
+        return str(table)
     
     def to_dict(self):
         # create dictionary based on class record
