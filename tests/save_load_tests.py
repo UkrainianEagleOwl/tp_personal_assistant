@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime
 
 
-class AddressBookTests(unittest.TestCase):
+class BooksSaveLoadTests(unittest.TestCase):
     def setUp(self):
         self.address_book = self.create_simple_book()
         self.notebook = self.create_simple_notebook()

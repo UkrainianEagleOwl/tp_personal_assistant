@@ -1,6 +1,5 @@
 import json
-from prettytable import PrettyTable
-from colorama import init, Fore, Style
+from colorama import Fore, Style
 from src.memory import SetterValueIncorrect
 
 
@@ -37,22 +36,10 @@ class Note:
         if self.tags:
             tags_str = ", ".join(tag.name for tag in self.tags)
         return "Title: {}\nTags: {}\nDescription: {}".format(self.title, tags_str, self.description)
-
-    def to_dict(self):
-        notes_data = []
-        for note in self.notes:
-            # Сохраняем только имена тегов
-            tags_data = [tag.name for tag in note.tags]
-            notes_data.append({
-                'title': note.title,
-                'tags': tags_data,  # Используем сохраненные имена тегов
-                'description': note.description
-            })
-        return {'notes': notes_data}
     
     def change_note_info(self,change_field, new_info):
         if change_field == 'tag':
-            self.tags == new_info if isinstance(new_info, Tag) else Tag(new_info)
+            self.tags[-1] = new_info if isinstance(new_info, Tag) else Tag(new_info)
         elif change_field == 'title':
             self.title = new_info
         elif change_field == "description":

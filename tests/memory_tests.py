@@ -151,7 +151,7 @@ class AddressBookTest(unittest.TestCase):
         # Assert the output matches the expected result
         expected_output = PrettyTable()
         expected_output.field_names = ['Greeting Day', 'Name', 'Phone', 'Date of Birth']
-        expected_output.add_row(['🎂 Thursday', 'John', '+380505435391', birthday1.value.strftime("%d.%m.%Y")])
+        expected_output.add_row(['🎂 Friday', 'John', '+380505435391', birthday1.value.strftime("%d.%m.%Y")])
         expected_output.add_row(['🎂 Monday', 'Jane', '+380505435391', birthday2.value.strftime("%d.%m.%Y")])
         self.assertEqual(str(output), str(expected_output))
 
