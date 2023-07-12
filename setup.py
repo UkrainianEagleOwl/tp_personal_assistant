@@ -1,8 +1,8 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='jarvis_assistant_bot',
-    version='0.4',
+    version='0.7',
     description='Personal assistant bot',
     author='Python Forces',
     url='https://github.com/UkrainianEagleOwl/tp_personal_assistant/tree/97c820e0779d54e488d5d824cce404b06bb4e654',
@@ -17,6 +17,9 @@ setup(
         'prettytable',
         'prompt_toolkit',
         'colorama',
+        'cryptography',
+        'openai',
+        'keyboard',
         'pygame'
     ],
 )

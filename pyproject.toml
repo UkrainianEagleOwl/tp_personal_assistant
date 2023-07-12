@@ -1,12 +1,12 @@
 [project]
 name = "jarvis_assistant_bot"
-version = "0.4"
+version = "0.6"
 authors = [
-  { name="Dmytro Filin", github="https://github.com/UkrainianEagleOwl" },
-  { name="Illya Grygoriev", github="https://github.com/Adentas" },
-  { name="Dmytro Klymenko", github="https://github.com/leegosx" },
-  { name="Dmytro Paukov", github="https://github.com/paukdv" },
-  { name="Alexandr ", github="https://github.com/sanyashahter" }
+  { name="Dmytro Filin"},
+  { name="Illya Grygoriev"},
+  { name="Dmytro Klymenko"},
+  { name="Dmytro Paukov"},
+  { name="Alexandr "}
 ]
 description = "Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently. With Jarvis, you can easily handle your daily tasks and keep your information in one place."
 readme = "README.md"

@@ -3,7 +3,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently. With Jarvis, you can easily handle your daily tasks and keep your information in one place.
+Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently. With Jarvis, you can easily handle your daily tasks and keep your information in one place.In addition, Jarvis integrates with ChatGPT, an AI language model, to provide interactive chat functionality.
 
 ## Table of Contents
 
@@ -25,6 +25,8 @@ Jarvis offers the following features:
 
 - **File Sorting**: If you have files in a specified folder, Jarvis can help you sort them by categories such as images, documents, videos, and more. This feature ensures that your files are organized and easily accessible.
 
+- **NEW UPDATE**: *Interactive chat functionality with ChatGPT.*
+
 ## Getting Started
 
 To get started with Jarvis, follow these steps:
@@ -32,11 +34,7 @@ To get started with Jarvis, follow these steps:
 ### Prerequisites
 
 - Python 3.x
-- Git
-- colorama 
-- prompt_toolkit
-- prettytable
-  
+- Git  
 
 ### Installation by clone from github
 
@@ -68,7 +66,22 @@ To get started with Jarvis, follow these steps:
    jarvis
    ```
 
-2. Follow the on-screen instructions to access and use Jarvis's various features, such as managing contacts, creating notes, and sorting files.
+2. Follow the on-screen instructions to access and use Jarvis's various features, such as managing contacts, creating notes, and sorting files. You can also interact with ChatGPT by typing messages. ChatGPT will respond to your inputs.
+
+## API Key
+
+In order to use the interactive chat functionality powered by ChatGPT, you will need an API key from OpenAI. Here's how you can obtain your API key:
+
+1. Visit the OpenAI website at [https://www.openai.com](https://www.openai.com).
+2. Create an account or log in to your existing account.
+3. Navigate to the API section and generate an API key for the GPT-3.5 model.
+4. Copy the API key to a secure location.
+
+When you run Jarvis for the first time, you will be prompted to enter your API key. Once entered, the key will be encrypted and saved on your computer for future usage. The encrypted key is used by the application to access the API and is only sent to OpenAI for processing your requests.
+
+## Privacy
+
+Jarvis takes privacy and data security seriously. The API key you provide is encrypted and stored locally on your computer. It is used solely for the purpose of accessing the OpenAI API to facilitate the interactive chat functionality. The key is not shared with any third parties or sent over the network. Your data and conversations are kept confidential.
 
 ## Contacts
 
