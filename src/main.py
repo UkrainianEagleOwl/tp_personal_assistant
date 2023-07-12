@@ -1,12 +1,34 @@
 
 
-from src.commands import find_closest_command, get_command_input
+from src.commands import find_closest_command, get_command_input,get_command_input_agree
 from src.save_load_books import *
-# AddressBook,SetterValueIncorrect,Name,Phone,Birthday,Address,Email
+from src.open_ai_input_assistent import *
 from src.memory import *
 from src.notes_core import Notebook,Tag
 from src.common_functions import STR_EPIC_ASSISTANT
 from colorama import init
+
+Use_Open_Ai = False
+
+def use_open_ai():
+    activated = activate_openai()
+    global Use_Open_Ai
+    if not activated:
+        print( Fore.MAGENTA + 'Do you want to use OpenAi in your work? You will need to enter an OpenAI API key. This is used by the extension to access the API and is only sent to OpenAI.' + Style.RESET_ALL)
+        agree = get_command_input_agree("Yes or No: ")
+        if agree.lower() == 'yes':
+            print(STR_OPENAI_HELP)
+            key = get_command_input('Enter an OpenAI API key: ')
+            activated = activate_openai(key)         
+            Use_Open_Ai = True
+            return activated
+        if agree.lower() == 'no':
+            print(Fore.MAGENTA + 'No problem, Sir. You will use base commands of Jarvis.' + Style.RESET_ALL)
+            return False
+    else:
+        Use_Open_Ai = True
+        return activated
+
 
 
 def start_work():
@@ -31,6 +53,8 @@ def start_work():
         notes_book = Notebook()
     print(STR_EPIC_ASSISTANT)
     address_book.get_birthdays_per_week()
+    if use_open_ai():
+        print(Fore.MAGENTA + 'If you will write something except commands, on this will answer ChatGPT.' + Style.RESET_ALL)
     return (address_book, notes_book)
 
 
@@ -85,6 +109,7 @@ def main():
     work_books = start_work()
     a_book = work_books[0]
     n_book = work_books[1]
+    global Use_Open_Ai
     while True:
         # Get user input for a command
         input_string = get_command_input("Enter a command: ")
@@ -101,12 +126,17 @@ def main():
             # End of app
             if command["name"] == 'ending':
                 break
+        elif Use_Open_Ai:
+            print(Fore.MAGENTA + input_answer_from_ai(input_string) + Style.RESET_ALL)
         else:
             print("Sorry, i don't understand this your command. Please try again.")
+
     # Save the address book to storage
     try:
         save_addressbook(a_book)
         save_notebook(n_book)
+        if Use_Open_Ai:
+            save_openai()
     except:
         print("Unfortunately, save failed :(")
 

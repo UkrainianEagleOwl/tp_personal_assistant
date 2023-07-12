@@ -13,6 +13,15 @@ from src.sorter import sort_files_in_this_path
 CHECK_SECOND_ARG_CHANGE_CONTACT = ("phone","email","birthday","address")
 CHECK_SECOND_ARG_CHANGE_NOTE = ("title","tag","description")
 
+def get_command_input_agree(Input_message=''):
+    Input_value = None
+    while True:
+        Input_value = prompt(Input_message)
+        if (Input_value.lower() == 'yes') or (Input_value.lower() == 'no'):
+            return Input_value
+        else:
+            print("You can write only 'yes' or 'no'!")
+
 def get_command_input(Input_message='',check_class = None,need_comp = True, check_add_command = None, arg_number = None):
     Input_value = None
     while True:

@@ -6,10 +6,12 @@ tp_personal_assistant/
         main.py
         memory.py
         notes_core.py
-        save_load_book.py
-        save_load_notebook.py
+        save_load_books.py
+        open_ai_input_assistent.py
         sorter.py
     setup.py
+    LICENSE
     MANIFEST.in
     CODE_OF_CONDUCT.md
+    pyproject.toml
     README.md

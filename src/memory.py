@@ -48,7 +48,7 @@ class AddressBook(UserDict):
                     user_info = {
                         'user_name': user_data.user_name.value,
                         'user_phones': ', '.join([str(x) for x in user_data.user_phones]),
-                        'user_birthday': user_data.user_birthday.value.strftime("%d.%m.%Y"),
+                        'user_birthday': user_data.user_birthday.value.strftime("%d %B"),
                         'day': '🎂' + ' ' + greeting_day
                     }
                     birthday_users.append(user_info)
