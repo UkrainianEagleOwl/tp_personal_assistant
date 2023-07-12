@@ -215,7 +215,6 @@ def show_all_notes(*arg, a_book=AddressBook,n_book=Notebook):
 
 def start_game(*arg,a_book = AddressBook,n_book = Notebook):
     play()
-    return help()
 
 def ending(*arg,a_book = AddressBook,n_book = Notebook):
     return 'Goodbye!'

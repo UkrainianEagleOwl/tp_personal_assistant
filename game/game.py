@@ -37,7 +37,7 @@ def play():
     def create_enemy():
         # enemy = pygame.Surface((20, 20))
         # enemy.fill((RED))
-        enemy = pygame.image.load('game/enemy.png').convert_alpha()
+        enemy = pygame.image.load('game/enemy2.png').convert_alpha()
         enemy_rect = pygame.Rect(width + enemy.get_width(), random.randint(0, height - enemy.get_height()), *enemy.get_size())
         enemy_speed = random.randint(6,10)
         return [enemy, enemy_rect, enemy_speed]
@@ -45,7 +45,7 @@ def play():
     def create_bonus():
         # bonus = pygame.Surface((20, 20))
         # bonus.fill((GREEN))
-        bonus = pygame.image.load('game/bonus.png').convert_alpha()
+        bonus = pygame.image.load('game/bonus2.png').convert_alpha()
         bonus_rect = pygame.Rect(random.randint(0, width - bonus.get_width()), -bonus.get_height(), *bonus.get_size())
         bonus_speed = random.randint(4,7)
         return [bonus, bonus_rect, bonus_speed]
@@ -63,7 +63,7 @@ def play():
                     bombss.append(create_bomb())
                     bombs -= 1
 
-    bg = pygame.transform.scale(pygame.image.load('game/background.png').convert(), screen)
+    bg = pygame.transform.scale(pygame.image.load('game/background2.png').convert(), screen)
     bgX = 0
     bgX2 = bg.get_width()
     bg_speed = 5
@@ -91,8 +91,10 @@ def play():
     start_screen = True
     is_working = False
     can_create_bomb = True
+    game_over = False
 
     def show_game_over_screen():
+        game_over = True
         while game_over:
             
             for event in pygame.event.get():
@@ -102,7 +104,7 @@ def play():
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
-                        # start_work()
+
                         
             custom_image = pygame.image.load('game/goose_doose.jpg').convert_alpha()
             custom_image_rect = custom_image.get_rect(center=(width // 2, height // 2))
@@ -152,7 +154,8 @@ def play():
         for event in pygame.event.get():
             if event.type == QUIT:
                 if pressed_keys[K_ESCAPE]:
-                    pygame.quit()
+                    show_game_over_screen()
+                    is_working == False
                 
             if event.type == CREATE_ENEMY:
                 enemies.append(create_enemy())
@@ -174,7 +177,7 @@ def play():
             
             if event.type == DEATH_EVENT:
                 is_working = False
-                game_over = True    
+                game_over = True   
         
         bgX -= bg_speed
         bgX2 -= bg_speed
