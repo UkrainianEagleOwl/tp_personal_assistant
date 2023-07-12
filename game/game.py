@@ -3,6 +3,7 @@ import pygame
 from pygame.constants import QUIT, K_DOWN, K_UP, K_LEFT, K_RIGHT, K_SPACE, K_s, K_w, K_a, K_d, K_ESCAPE
 import random
 import time
+from goose import *
 
 def game():
 
@@ -24,7 +25,7 @@ def game():
 
     main_surface = pygame.display.set_mode(screen)
 
-    IMGS_PATH = 'goose'
+    IMGS_PATH = 'game/goose'
 
     # player = pygame.Surface((20, 20))
     # player.fill((WHITE))
@@ -36,7 +37,7 @@ def game():
     def create_enemy():
         # enemy = pygame.Surface((20, 20))
         # enemy.fill((RED))
-        enemy = pygame.image.load('enemy.png').convert_alpha()
+        enemy = pygame.image.load('game/enemy.png').convert_alpha()
         enemy_rect = pygame.Rect(width + enemy.get_width(), random.randint(0, height - enemy.get_height()), *enemy.get_size())
         enemy_speed = random.randint(6,10)
         return [enemy, enemy_rect, enemy_speed]
@@ -44,13 +45,13 @@ def game():
     def create_bonus():
         # bonus = pygame.Surface((20, 20))
         # bonus.fill((GREEN))
-        bonus = pygame.image.load('bonus.png').convert_alpha()
+        bonus = pygame.image.load('game/bonus.png').convert_alpha()
         bonus_rect = pygame.Rect(random.randint(0, width - bonus.get_width()), -bonus.get_height(), *bonus.get_size())
         bonus_speed = random.randint(4,7)
         return [bonus, bonus_rect, bonus_speed]
 
     def create_bomb():
-        bomb = pygame.image.load('bomb.png').convert_alpha()
+        bomb = pygame.image.load('game/bomb.png').convert_alpha()
         bomb_rect = player_rect
         bomb_speed = random.randint(5,8)
         return [bomb, bomb_rect, bomb_speed]
@@ -62,7 +63,7 @@ def game():
                     bombss.append(create_bomb())
                     bombs -= 1
 
-    bg = pygame.transform.scale(pygame.image.load('background.png').convert(), screen)
+    bg = pygame.transform.scale(pygame.image.load('game/background.png').convert(), screen)
     bgX = 0
     bgX2 = bg.get_width()
     bg_speed = 5
@@ -102,7 +103,7 @@ def game():
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         
-            custom_image = pygame.image.load('goose_doose.jpg').convert_alpha()
+            custom_image = pygame.image.load('game/goose_doose.jpg').convert_alpha()
             custom_image_rect = custom_image.get_rect(center=(width // 2, height // 2))
             main_surface.blit(custom_image, custom_image_rect)
             
@@ -126,7 +127,7 @@ def game():
         main_surface.blit(bg, (0, 0))
         
         # Власна картинка та напис
-        custom_image = pygame.image.load('background.png').convert_alpha()
+        custom_image = pygame.image.load('game/background.png').convert_alpha()
         custom_image_rect = custom_image.get_rect(center=(width // 2, height // 2))
         main_surface.blit(custom_image, custom_image_rect)
 
