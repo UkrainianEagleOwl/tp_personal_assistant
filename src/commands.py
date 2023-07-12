@@ -9,7 +9,7 @@ from src.common_functions import STR_EPIC_COMMANDS
 from src.memory import Record,SetterValueIncorrect,AddressBook,Phone
 from src.notes_core import *
 from src.sorter import sort_files_in_this_path
-from game.game import *
+from src.goose_game import *
 import keyboard
 
 CHECK_SECOND_ARG_CHANGE_CONTACT = ("phone","email","birthday","address")

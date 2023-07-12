@@ -5,13 +5,13 @@ tp_personal_assistant/
         common_functions.py
         main.py
         memory.py
+        goose_game.py
         notes_core.py
         save_load_books.py
         open_ai_input_assistent.py
         sorter.py
         game/
             goose/
-                __init__.py
                 1-1.png
                 1-2.png
                 1-3.png
@@ -25,7 +25,6 @@ tp_personal_assistant/
             bonus2.png
             enemy.png
             enemy2.png
-            game.py
             goose_doose.jpg
             player.png
     setup.py

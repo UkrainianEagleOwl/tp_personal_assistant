@@ -1,6 +1,6 @@
 [project]
 name = "jarvis_assistant_bot"
-version = "1.0"
+version = "1.001"
 authors = [
   { name="Dmytro Filin"},
   { name="Illya Grygoriev"},
