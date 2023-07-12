@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='jarvis_assistant_bot',
-    version='1.001',
+    version='1.2',
     description='Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently.',
     author='Python Forces',
     url='https://github.com/UkrainianEagleOwl/tp_personal_assistant/tree/97c820e0779d54e488d5d824cce404b06bb4e654',

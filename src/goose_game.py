@@ -2,8 +2,6 @@ from os import listdir
 import pygame
 from pygame.constants import QUIT, K_DOWN, K_UP, K_LEFT, K_RIGHT, K_SPACE, K_s, K_w, K_a, K_d, K_ESCAPE
 import random
-import time
-# from src.main import *
 
 def play():
 
@@ -95,25 +93,25 @@ def play():
 
     def show_game_over_screen():
         game_over = True
-        while game_over:
-            
+        while game_over:           
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
+                    game_over = False
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        pygame.quit()
+                        game_over = False
 
-                        
+            # keyboard.wait('esc')
+
             custom_image = pygame.image.load('src/game/goose_doose.jpg').convert_alpha()
             custom_image_rect = custom_image.get_rect(center=(width // 2, height // 2))
             main_surface.blit(custom_image, custom_image_rect)
-            
+                    
             game_over_text = font.render("Гра закінчена!", True, WHITE)
             game_over_rect = game_over_text.get_rect(center=(width // 2 + 150, height // 2 - 100))
             main_surface.blit(game_over_text, game_over_rect)
-            
+                    
             extra_text = font.render("Гусак пішов на лікарняний", True, WHITE)
             extra_rect = extra_text.get_rect(center=(width // 2 + 150, height // 2 - 50))
             main_surface.blit(extra_text, extra_rect)
@@ -121,8 +119,11 @@ def play():
             score_text = font.render("Ваш рахунок: " + str(scores), True, WHITE)
             score_rect = score_text.get_rect(center=(width // 2 + 150, height // 2 ))
             main_surface.blit(score_text, score_rect)
-            
+                    
             pygame.display.flip()
+        print('The End. Thank for attention.')
+        pygame.quit()
+
         
     while start_screen:
         
@@ -161,7 +162,6 @@ def play():
                 enemies.append(create_enemy())
                 if len(enemies) <= 2:
                     enemies.append(create_enemy())
-                    print(len(enemies))
                 if scores !=0 and scores % 10 == 0:
                     enemies.append(create_enemy())
                     enemies.append(create_enemy())

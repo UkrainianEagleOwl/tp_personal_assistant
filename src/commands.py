@@ -9,8 +9,6 @@ from src.common_functions import STR_EPIC_COMMANDS
 from src.memory import Record,SetterValueIncorrect,AddressBook,Phone
 from src.notes_core import *
 from src.sorter import sort_files_in_this_path
-from src.goose_game import *
-import keyboard
 
 CHECK_SECOND_ARG_CHANGE_CONTACT = ("phone","email","birthday","address")
 CHECK_SECOND_ARG_CHANGE_NOTE = ("title","tag","description")
@@ -223,7 +221,7 @@ def show_all_notes(*arg, a_book=AddressBook,n_book=Notebook):
     return table
 
 def start_game(*arg,a_book = AddressBook,n_book = Notebook):
-    play()
+    return "Starting the game..."
 
 def ending(*arg,a_book = AddressBook,n_book = Notebook):
     return 'Goodbye!'

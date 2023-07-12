@@ -7,6 +7,7 @@ from src.memory import *
 from src.notes_core import Notebook,Tag
 from src.common_functions import STR_EPIC_ASSISTANT
 from colorama import init
+from src.goose_game import *
 import keyboard
 import os
 
@@ -139,6 +140,10 @@ def main():
                     print(i)
             else:
                 print(result) if result else None
+                if result == "Starting the game...":
+                    play()
+                    end_work()
+
             # End of app
             if command["name"] == 'ending':
                 break
