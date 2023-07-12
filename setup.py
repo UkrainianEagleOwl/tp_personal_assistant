@@ -17,5 +17,6 @@ setup(
         'prettytable',
         'prompt_toolkit',
         'colorama',
+        'pygame'
     ],
 )

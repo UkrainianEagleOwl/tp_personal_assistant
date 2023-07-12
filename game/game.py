@@ -3,9 +3,9 @@ import pygame
 from pygame.constants import QUIT, K_DOWN, K_UP, K_LEFT, K_RIGHT, K_SPACE, K_s, K_w, K_a, K_d, K_ESCAPE
 import random
 import time
-from goose import *
+# from src.main import *
 
-def game():
+def play():
 
     pygame.init()
 
@@ -102,6 +102,7 @@ def game():
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
+                        # start_work()
                         
             custom_image = pygame.image.load('game/goose_doose.jpg').convert_alpha()
             custom_image_rect = custom_image.get_rect(center=(width // 2, height // 2))
@@ -278,4 +279,4 @@ def game():
     if game_over:
         show_game_over_screen()
 if __name__ == '__main__':
-    game()
+    play()
