@@ -1,35 +1,6 @@
-tp_personal_assistant/
-    src/
-        __init__.py
-        commands.py
-        common_functions.py
-        main.py
-        memory.py
-        goose_game.py
-        notes_core.py
-        save_load_books.py
-        open_ai_input_assistent.py
-        sorter.py
-        game/
-            goose/
-                1-1.png
-                1-2.png
-                1-3.png
-                1-4.png
-                1-5.png
-            __init__.py
-            background.png
-            background2.png
-            bomb.png
-            bonus.png
-            bonus2.png
-            enemy.png
-            enemy2.png
-            goose_doose.jpg
-            player.png
-    setup.py
-    LICENSE
-    MANIFEST.in
-    CODE_OF_CONDUCT.md
-    pyproject.toml
-    README.md
+recursive-include src/game/goose *.png
+recursive-include src/game *.png *.jpg
+include LICENSE
+include CODE_OF_CONDUCT.md
+include pyproject.toml
+include README.md
