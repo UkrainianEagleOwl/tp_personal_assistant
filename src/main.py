@@ -7,8 +7,11 @@ from src.memory import *
 from src.notes_core import Notebook,Tag
 from src.common_functions import STR_EPIC_ASSISTANT
 from colorama import init
+import keyboard
+import os
 
 Use_Open_Ai = False
+work_books = None
 
 def use_open_ai():
     activated = activate_openai()
@@ -28,8 +31,6 @@ def use_open_ai():
     else:
         Use_Open_Ai = True
         return activated
-
-
 
 def start_work():
     # Initialize colorama
@@ -57,7 +58,18 @@ def start_work():
         print(Fore.MAGENTA + 'If you will write something except commands, on this will answer ChatGPT.' + Style.RESET_ALL)
     return (address_book, notes_book)
 
-
+def end_work():
+    try:
+        global work_books
+        save_addressbook(work_books[0])
+        save_notebook(work_books[1])
+        global Use_Open_Ai
+        if Use_Open_Ai:
+            save_openai()
+    except:
+        print("Unfortunately, save failed :(")
+    finally:
+        os._exit(0) 
 
 def command_exe(command=dict, adress_book=AddressBook, note_book=Notebook):
     cmd_func = command.get('func')
@@ -106,9 +118,13 @@ def command_exe(command=dict, adress_book=AddressBook, note_book=Notebook):
 
 
 def main():
+    global work_books
     work_books = start_work()
     a_book = work_books[0]
     n_book = work_books[1]
+
+    keyboard.add_hotkey('esc', lambda: end_work())
+
     global Use_Open_Ai
     while True:
         # Get user input for a command
@@ -131,14 +147,7 @@ def main():
         else:
             print("Sorry, i don't understand this your command. Please try again.")
 
-    # Save the address book to storage
-    try:
-        save_addressbook(a_book)
-        save_notebook(n_book)
-        if Use_Open_Ai:
-            save_openai()
-    except:
-        print("Unfortunately, save failed :(")
+    end_work()
 
 
 if __name__ == '__main__':
