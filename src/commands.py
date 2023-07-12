@@ -9,6 +9,8 @@ from src.common_functions import STR_EPIC_COMMANDS
 from src.memory import Record,SetterValueIncorrect,AddressBook,Phone
 from src.notes_core import *
 from src.sorter import sort_files_in_this_path
+from game.game import *
+import keyboard
 
 CHECK_SECOND_ARG_CHANGE_CONTACT = ("phone","email","birthday","address")
 CHECK_SECOND_ARG_CHANGE_NOTE = ("title","tag","description")
@@ -220,14 +222,17 @@ def show_all_notes(*arg, a_book=AddressBook,n_book=Notebook):
     table = n_book.show_notes()
     return table
 
+def start_game(*arg,a_book = AddressBook,n_book = Notebook):
+    play()
+
 def ending(*arg,a_book = AddressBook,n_book = Notebook):
     return 'Goodbye!'
 
 input_variants = ['hello','hi','start','add contact','new contact','create contact','change contact','change phone','change contact details',"sort","sort files","need sort",
-                  'get contact','show contact','show person','show contacts','show address book','show all book','goodbye','close','end','search user','find contact','find user', "help","commands",
+                  'get contact', 'show contact','show person','show contacts','show address book','show all book','goodbye','close','end','search user','find contact','find user', "help","commands",
                   "need help",'remove note','delete note','get note out','add note', 'new note','create note','find notes', 'search notes','remove contact','delete contact','take out contact'
                   ,"edit note", "change note", "search by tag","sort by tag",'show all notes','show notebook','show notes','give me note',"find by tag","give me note by tag"
-                  ,"tag sorting","notebook sort by tag","remake note"]
+                  ,"tag sorting","notebook sort by tag","remake note", 'game', 'play', 'fun']
 # Ініціалізація автодоповнювача зі списком команд
 completer = WordCompleter(input_variants)
 
@@ -238,6 +243,12 @@ commands = [
         "input view":["hello",'hi','start'],
         "arguments": [],
         "func":greetings
+    },
+    {
+        "name": "game",
+        "input view": ['game','play','fun'],
+        "arguments": [],
+        "func":start_game
     },
     {
         "name": "add new contact",

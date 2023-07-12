@@ -19,6 +19,7 @@ setup(
         'colorama',
         'cryptography',
         'openai',
-        'keyboard'
+        'keyboard',
+        'pygame'
     ],
 )
