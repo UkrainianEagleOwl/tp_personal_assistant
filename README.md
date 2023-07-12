@@ -3,7 +3,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently. With Jarvis, you can easily handle your daily tasks and keep your information in one place.In addition, Jarvis integrates with ChatGPT, an AI language model, to provide interactive chat functionality.
+Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently. With Jarvis, you can easily handle your daily tasks and keep your information in one place.In addition, Jarvis integrates with ChatGPT, an AI language model, to provide interactive chat functionality. And to add some entertainment after a hard working day, Jarvis also includes a fun game about Bandera-goose.
 
 ## Table of Contents
 
@@ -26,6 +26,8 @@ Jarvis offers the following features:
 - **File Sorting**: If you have files in a specified folder, Jarvis can help you sort them by categories such as images, documents, videos, and more. This feature ensures that your files are organized and easily accessible.
 
 - **NEW UPDATE**: *Interactive chat functionality with ChatGPT.*
+
+- **NEW UPDATE**: *Enjoy a fun game about Bandera-goose after a hard working day!*
 
 ## Getting Started
 
@@ -82,6 +84,10 @@ When you run Jarvis for the first time, you will be prompted to enter your API k
 ## Privacy
 
 Jarvis takes privacy and data security seriously. The API key you provide is encrypted and stored locally on your computer. It is used solely for the purpose of accessing the OpenAI API to facilitate the interactive chat functionality. The key is not shared with any third parties or sent over the network. Your data and conversations are kept confidential.
+
+## Game
+
+Jarvis includes a fun game about Bandera-goose, designed to provide some entertainment after a hard working day. Interact with the game during your leisure time and enjoy the experience.
 
 ## Contacts
 

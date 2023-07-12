@@ -1,6 +1,6 @@
 [project]
 name = "jarvis_assistant_bot"
-version = "0.6"
+version = "1.0"
 authors = [
   { name="Dmytro Filin"},
   { name="Illya Grygoriev"},
@@ -8,7 +8,7 @@ authors = [
   { name="Dmytro Paukov"},
   { name="Alexandr "}
 ]
-description = "Welcome to Jarvis, your personal assistant! Jarvis is here to help you stay organized and manage your contacts, reminders, notes, and files efficiently. With Jarvis, you can easily handle your daily tasks and keep your information in one place."
+description = "Jarvis is a personal assistant application that allows you to manage your address book with contacts. The application provides features to add, remove, change, save, and load contacts, making it easier to organize your personal or professional network. In addition, Jarvis integrates with ChatGPT, an AI language model, to provide interactive chat functionality. And to add some entertainment after a hard working day, Jarvis also includes a fun game about Bandera-goose."
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
